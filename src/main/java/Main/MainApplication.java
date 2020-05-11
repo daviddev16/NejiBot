@@ -14,7 +14,8 @@ public class MainApplication {
     public static void main(String[] args) throws LoginException {
 
         JDABuilder builder = JDABuilder.createDefault(Manager.BOT_TOKEN);
-        Manager.setup(builder);
+        Manager manager = new Manager();
+        manager.setup(builder);
         singleJDA = builder.build();
         singleJDA.addEventListener(new RegisterListener());
 

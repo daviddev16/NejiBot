@@ -3,7 +3,8 @@ package Main;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Role;
+
+import java.util.Objects;
 
 public class Rule {
 
@@ -41,23 +42,23 @@ public class Rule {
 
     public synchronized void addMember(Member member, Guild guild){
         if(!hasTag(member, guild)){
-            guild.addRoleToMember(member, guild.getRoleById(getRoleId())).queue();
+            guild.addRoleToMember(member, Objects.requireNonNull(guild.getRoleById(getRoleId()))).queue();
+            updateDisplayTag(member, guild);
         }
-        updateDisplayTag(member, guild);
     }
 
     public synchronized void removeMember(Member member, Guild guild){
         if(hasTag(member, guild)) {
-            guild.removeRoleFromMember(member, guild.getRoleById(roleId)).queue();
+            guild.removeRoleFromMember(member, Objects.requireNonNull(guild.getRoleById(roleId))).queue();
+            updateDisplayTag(member, guild);
         }
-        updateDisplayTag(member, guild);
     }
 
     private synchronized  void updateDisplayTag(Member member, Guild guild){
-        if(Manager.IsDeveloper(member, guild)) {
-            guild.addRoleToMember(member, guild.getRoleById(Manager.DEVELOPER_TAG_ID)).queue();
+        if(Manager.getInstance().IsDeveloper(member, guild)) {
+            guild.addRoleToMember(member, Objects.requireNonNull(guild.getRoleById(Manager.DEVELOPER_TAG_ID))).queue();
             return;
         }
-        guild.removeRoleFromMember(member, guild.getRoleById(Manager.DEVELOPER_TAG_ID)).queue();
+        guild.removeRoleFromMember(member, Objects.requireNonNull(guild.getRoleById(Manager.DEVELOPER_TAG_ID))).queue();
     }
 }

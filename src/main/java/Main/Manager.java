@@ -20,7 +20,7 @@ public class Manager {
 
     public static final long DEVELOPER_TAG_ID = 707784153252495424L;
 
-    public static List<Rule> programmingLanguageRules;
+    private volatile List<Rule> plRules;
 
     public static Rule CSHARP = new Rule("CSharp", "707782080377126962");
     public static Rule CPP = new Rule("CPP", "707782500012916776");
@@ -29,32 +29,35 @@ public class Manager {
     public static Rule JAVA = new Rule("Java", "707782228608024627");
     public static Rule RUBY = new Rule("Ruby", "707783759054897184");
 
-    public static void setup(JDABuilder builder) {
+    public static Manager singleton;
 
-        programmingLanguageRules = new ArrayList<Rule>();
-        programmingLanguageRules.add(CSHARP);
-        programmingLanguageRules.add(CPP);
-        programmingLanguageRules.add(JAVASCRIPT);
-        programmingLanguageRules.add(PYTHON);
-        programmingLanguageRules.add(JAVA);
-        programmingLanguageRules.add(RUBY);
-
+    public Manager(){
+        singleton = this;
+    }
+    /*setup bot*/
+    public void setup(JDABuilder builder) {
+        plRules = new ArrayList<>();
+        plRules.add(CSHARP);
+        plRules.add(CPP);
+        plRules.add(JAVASCRIPT);
+        plRules.add(PYTHON);
+        plRules.add(JAVA);
+        plRules.add(RUBY);
     }
 
-    public static InputStream getInputStream(String name){
-        return Manager.class.getResourceAsStream(name);
+    public List<Rule> getRules(){
+        return plRules;
     }
 
-    public static boolean catchRegistrationMessage(TextChannel channel, long messageId){
-        if(channel.getIdLong() == Manager.REGISTER_TEXT_CHANNEL_ID &&
-                messageId == Manager.PROGRAMMING_LANGUAGE_MESSAGE_ID){
-            return true;
-        }
-        return false;
+    /*find registration message*/
+    public boolean catchRegistrationMessage(TextChannel channel, long messageId){
+        return channel.getIdLong() == Manager.REGISTER_TEXT_CHANNEL_ID &&
+                messageId == Manager.PROGRAMMING_LANGUAGE_MESSAGE_ID;
     }
 
-    public static boolean IsDeveloper(Member member, Guild guild) {
-        for (Rule allLanguages : programmingLanguageRules) {
+    /*check if member is developer*/
+    public boolean IsDeveloper(Member member, Guild guild) {
+        for (Rule allLanguages : plRules) {
             if (allLanguages.hasTag(member, guild)) {
                 return true;
             }
@@ -62,7 +65,8 @@ public class Manager {
         return false;
     }
 
-    public static Emote getEmoteByName(String name, Guild guild) {
+    /*find emote by name*/
+    public Emote getEmoteByName(String name, Guild guild) {
         for(Emote emote : guild.getEmotes()){
             if(emote.getName().equalsIgnoreCase(name)){
                 return emote;
@@ -71,13 +75,22 @@ public class Manager {
         return null;
     }
 
-    public static Rule findMyRuleByEmote(Emote emote) {
-        for (Rule allLanguages : programmingLanguageRules) {
+    /*find rule by emote*/
+    public Rule findMyRuleByEmote(Emote emote) {
+        for (Rule allLanguages : plRules) {
             if(allLanguages.isMine(emote)){
                 return allLanguages;
             }
         }
         return null;
+    }
+
+    public static InputStream getInputStream(String name){
+        return Manager.class.getResourceAsStream(name);
+    }
+
+    public static Manager getInstance(){
+        return singleton;
     }
 
 }

@@ -18,6 +18,6 @@ repositories {
 }
 
 dependencies {
-    compile group: 'net.dv8tion', name: 'JDA', version: '4.1.1_145'
+    compile group: 'net.dv8tion', name: 'JDA', version: '4.1.1_147'
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

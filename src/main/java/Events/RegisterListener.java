@@ -15,14 +15,19 @@ import java.io.IOException;
 
 public class RegisterListener extends ListenerAdapter {
 
+
+    public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
+        tempCommand(event);
+    }
+
     @Deprecated
     public static void tempCommand(MessageReceivedEvent event){
 
         if(event.getMessage().getContentRaw().equals("-b")){
-            Manager.PROGRAMMING_LANGUAGE_MESSAGE_ID = event.getMessage().getIdLong();
+            Manager.GAME_ENGINE_ID = event.getMessage().getIdLong();
             try {
-                event.getTextChannel().sendFile(RegisterListener.class.getResource("/banner_register.png").openStream(), "banner.png").queue(message -> {
-                    for(Rule plRules : Manager.getInstance().getRules()){
+                event.getTextChannel().sendFile(RegisterListener.class.getResource("/banner_register1.png").openStream(), "banner1.png").queue(message -> {
+                    for(Rule plRules : Manager.getInstance().getSecoundaryRules()){
                         message.addReaction(Manager.getInstance().getEmoteByName(plRules.getEmoteName(), message.getGuild())).queue();
                     }
                 });

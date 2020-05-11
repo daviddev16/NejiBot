@@ -16,11 +16,15 @@ public class Manager {
 
     public static long PROGRAMMING_LANGUAGE_MESSAGE_ID = 709263002599161987L;
 
+    public static long GAME_ENGINE_ID = 709263002599161987L;
+
     public static final long REGISTER_TEXT_CHANNEL_ID = 708748306049663067L;
 
     public static final long DEVELOPER_TAG_ID = 707784153252495424L;
 
     private volatile List<Rule> plRules;
+
+    private volatile List<Rule> geRules;
 
     public static Rule CSHARP = new Rule("CSharp", "707782080377126962");
     public static Rule CPP = new Rule("CPP", "707782500012916776");
@@ -28,6 +32,7 @@ public class Manager {
     public static Rule PYTHON = new Rule("Python", "707782275533897778");
     public static Rule JAVA = new Rule("Java", "707782228608024627");
     public static Rule RUBY = new Rule("Ruby", "707783759054897184");
+
 
     public static Manager singleton;
 
@@ -45,8 +50,12 @@ public class Manager {
         plRules.add(RUBY);
     }
 
-    public List<Rule> getRules(){
+    public List<Rule> getPrimaryRules(){
         return plRules;
+    }
+
+    public List<Rule> getSecoundaryRules(){
+        return geRules;
     }
 
     /*find registration message*/

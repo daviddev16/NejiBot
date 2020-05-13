@@ -2,10 +2,15 @@ package nejidev.api;
 
 import nejidev.main.*;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.events.role.GenericRoleEvent;
+import net.dv8tion.jda.api.events.role.update.GenericRoleUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
 
 import javax.annotation.Nonnull;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -28,6 +33,8 @@ public abstract class Banner extends ListenerAdapter {
     /*Guild do servidor*/
     private Guild guild;
 
+    private long displayTagRoleId;
+
     /**
      * Esta classe permite você criar banners personalizados
      * em forma de mensagem que exibirá reações, e essas reações
@@ -37,6 +44,7 @@ public abstract class Banner extends ListenerAdapter {
         this.setMessageId(messageId);
         this.setReactionRoles(new ArrayList<>());
     }
+
 
     /*Caso ainda não exista a mensagem, use esta função para criar a mensagem personalizada*/
     public Banner displayBanner(){
@@ -61,20 +69,20 @@ public abstract class Banner extends ListenerAdapter {
     /*Esta função será chamada quando o banner já estiver adicionado ao bot sem erros.*/
     public abstract void onAdded();
 
+
     @SuppressWarnings("ConstantConditions")
     public void onMessageReactionAdd(@Nonnull MessageReactionAddEvent event) {
 
-        if(event.getUser().isBot()){
+        if (event.getUser().isBot()) {
             return;
         }
-            if((event.getChannel().getIdLong() == getTextChannelId()) &&
-                    event.getMessageId().equalsIgnoreCase(Long.toString(getMessageId()))) {
+        if ((event.getChannel().getIdLong() == getTextChannelId()) &&
+                event.getMessageId().equalsIgnoreCase(Long.toString(getMessageId()))) {
 
-                ReactionRole foundRole = findReactionRole(event.getReactionEmote().getEmote());
-                foundRole = requireNonNull(foundRole);
-                foundRole.addMember(event.getMember());
-
-            }
+            ReactionRole foundRole = findReactionRole(event.getReactionEmote().getEmote());
+            foundRole = requireNonNull(foundRole);
+            addMemberToReactionRole(foundRole, event.getMember());
+        }
     }
 
     public void clearMember(Member member){
@@ -85,9 +93,8 @@ public abstract class Banner extends ListenerAdapter {
         assert channel != null;
         for(ReactionRole roles : getReactionRoles()){
             channel.removeReactionById(messageId, Utils.findEmoteByName(roles.getEmoteName()), member.getUser()).queue();
-            roles.removeMember(member);
+            roles.removeMember(member).queue();
         }
-
     }
 
     public ReactionRole findReactionRole(Emote emote){
@@ -100,9 +107,12 @@ public abstract class Banner extends ListenerAdapter {
     }
 
     /*adicionar role por reação*/
-    public Banner addReactionRoles(ReactionRole reactionRole){
+    public void addReactionRoles(ReactionRole reactionRole){
         getReactionRoles().add(reactionRole);
-        return this;
+    }
+
+    public void setDisplayTagRoleId(long displayTagRoleId){
+        this.displayTagRoleId = displayTagRoleId;
     }
 
     public List<ReactionRole> getReactionRoles(){
@@ -140,4 +150,19 @@ public abstract class Banner extends ListenerAdapter {
         this.bannerPath = bannerPath;
         return this;
     }
+
+    /*adicionar role ao jogador*/
+    private void addMemberToReactionRole(ReactionRole role, Member member){
+        role.addMember(member).queue();
+    }
+
+    private boolean hasAnyTag(Member member){
+        for(ReactionRole role : getReactionRoles()) {
+            if (role.hasTag(member)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

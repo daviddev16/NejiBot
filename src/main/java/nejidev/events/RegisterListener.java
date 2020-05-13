@@ -15,7 +15,7 @@ public class RegisterListener extends ListenerAdapter {
 
         if (!Objects.requireNonNull(event.getMember()).getUser().isBot()) {
             if (event.getMessage().getContentRaw().equalsIgnoreCase("-c")) {
-                MainApplication.getBot().displayAll();
+                MainApplication.getBot().getBanners().get(1).displayBanner();
             }
         }
 

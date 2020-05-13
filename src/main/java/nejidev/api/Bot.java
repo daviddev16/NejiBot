@@ -53,6 +53,10 @@ public abstract class Bot {
         }
     }
 
+    public List<Banner> getBanners(){
+        return banners;
+    }
+
     public JDA getJavaDiscordAPI(){
         return javaDiscordAPI;
     }

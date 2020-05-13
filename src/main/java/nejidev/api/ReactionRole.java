@@ -4,6 +4,7 @@ import nejidev.main.MainApplication;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
 
 import java.util.Objects;
 
@@ -12,22 +13,10 @@ public class ReactionRole {
     private String emoteName;
     private String roleId;
 
-    private long roleDisplayId;
-
     public ReactionRole(String emoteName, String roleId){
         this.setRoleId(roleId);
         this.setEmoteName(emoteName);
     }
-
-    public ReactionRole setRoleDisplayId(long roleDisplayId){
-        this.roleDisplayId = roleDisplayId;
-        return this;
-    }
-
-    public long getRoleDisplayId(){
-        return roleDisplayId;
-    }
-
     public String getEmoteName(){
         return this.emoteName;
     }
@@ -49,29 +38,26 @@ public class ReactionRole {
     }
 
     public synchronized boolean hasTag(Member member){
-
-        if(member.getRoles().isEmpty()){
-            return false;
-        }
-
         for(Role roles : member.getRoles()) {
-            if (roles.getId().equalsIgnoreCase(roleId)) {
+            if (roleId.equals(roles.getId())) {
                 return true;
             }
         }
         return false;
+
     }
 
-
-    public synchronized void addMember(Member member){
+    public synchronized AuditableRestAction<Void> addMember(Member member){
         if(!hasTag(member)){
-            MainApplication.getBot().getOfficialGuild().addRoleToMember(member, Objects.requireNonNull(MainApplication.getBot().getOfficialGuild().getRoleById(getRoleId()))).queue();
+            return MainApplication.getBot().getOfficialGuild().addRoleToMember(member, Objects.requireNonNull(MainApplication.getBot().getOfficialGuild().getRoleById(getRoleId())));
         }
+        return null;
     }
 
-    public synchronized void removeMember(Member member){
+    public synchronized AuditableRestAction<Void> removeMember(Member member){
         if(hasTag(member)) {
-            MainApplication.getBot().getOfficialGuild().removeRoleFromMember(member, Objects.requireNonNull(MainApplication.getBot().getOfficialGuild().getRoleById(roleId))).queue();
+            return MainApplication.getBot().getOfficialGuild().removeRoleFromMember(member, Objects.requireNonNull(MainApplication.getBot().getOfficialGuild().getRoleById(roleId)));
         }
+        return null;
     }
 }

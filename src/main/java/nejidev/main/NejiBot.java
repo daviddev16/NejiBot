@@ -1,6 +1,7 @@
 package nejidev.main;
 
 import nejidev.api.Bot;
+import nejidev.banners.GameEngineBanner;
 import nejidev.banners.ProgrammingLanguageBanner;
 import nejidev.events.RegisterListener;
 
@@ -22,6 +23,7 @@ public class NejiBot extends Bot {
         System.out.println("connected.");
 
         addBanner(new ProgrammingLanguageBanner());
+        addBanner(new GameEngineBanner());
 
        setServerGuild(getJavaDiscordAPI().getGuildById(MainApplication.SERVER_ID));
 

@@ -7,6 +7,7 @@ import javax.security.auth.login.LoginException;
 public class MainApplication {
 
 
+    /*id do servidor*/
     public static long SERVER_ID = 707778877493215364L;
 
     private static Bot bot;

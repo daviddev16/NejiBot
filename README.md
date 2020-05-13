@@ -2,6 +2,8 @@
 Este bot é dedicado somente para o meu servidor, porem deixarei o respositorio dele sempre atualizado aqui para quem quiser da uma olhada.
 Como o bot está em desenvolvimento ainda, não possui muitas funcionalidades.
 
+Qualquer token no codigo é invalido.
+
 ![Logo](https://i.imgur.com/VYkxeGu.png)
 
 Liberarei o link do server assim que tudo estiver arrumado :)

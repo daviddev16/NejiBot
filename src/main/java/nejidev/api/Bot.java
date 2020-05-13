@@ -69,22 +69,23 @@ public abstract class Bot {
         serverGuild = guild;
     }
 
+    /*essa função será chamada quando o bot for carregado e conectado*/
     public abstract void onConnected();
 
+    /*carregar a JDA*/
     public Bot load() throws LoginException {
 
         JDABuilder builder = JDABuilder.createDefault(token);
         javaDiscordAPI = builder.build();
 
         serverGuild = javaDiscordAPI.getGuildById(serverId);
+
         javaDiscordAPI.addEventListener(new ListenerAdapter() {
             public void onStatusChange(@Nonnull StatusChangeEvent event) {
-                if(event.getNewStatus() == JDA.Status.CONNECTED){
-                    onConnected();
-
-                }
+                if(event.getNewStatus() == JDA.Status.CONNECTED) onConnected();
             }
         });
+
         return this;
     }
 

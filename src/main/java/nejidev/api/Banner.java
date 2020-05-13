@@ -1,19 +1,15 @@
 package nejidev.api;
 
+import nejidev.api.utils.GuildUtils;
+import nejidev.api.utils.Utils;
 import nejidev.main.*;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
-import net.dv8tion.jda.api.events.role.GenericRoleEvent;
-import net.dv8tion.jda.api.events.role.update.GenericRoleUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
 
 import javax.annotation.Nonnull;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static java.util.Objects.*;
 
@@ -85,6 +81,7 @@ public abstract class Banner extends ListenerAdapter {
         }
     }
 
+    /*limpar cargos do membro*/
     public void clearMember(Member member){
 
         Bot bot = MainApplication.getBot();
@@ -123,32 +120,28 @@ public abstract class Banner extends ListenerAdapter {
         return messageId;
     }
 
-    public Banner setMessageId(long messageId) {
+    public void setMessageId(long messageId) {
         this.messageId = messageId;
-        return this;
     }
 
     public long getTextChannelId() {
         return textChannelId;
     }
 
-    public Banner setTextChannelId(long textChannelId) {
+    public void setTextChannelId(long textChannelId) {
         this.textChannelId = textChannelId;
-        return this;
     }
 
-    public Banner setReactionRoles(List<ReactionRole> reactionRoles) {
+    public void setReactionRoles(List<ReactionRole> reactionRoles) {
         this.reactionRoles = reactionRoles;
-        return this;
     }
 
     public String getBannerPath(){
         return bannerPath;
     }
 
-    public Banner setBannerPath(String bannerPath){
+    public void setBannerPath(String bannerPath){
         this.bannerPath = bannerPath;
-        return this;
     }
 
     /*adicionar role ao jogador*/
@@ -156,6 +149,7 @@ public abstract class Banner extends ListenerAdapter {
         role.addMember(member).queue();
     }
 
+    /*checar se o membro possui a tag*/
     private boolean hasAnyTag(Member member){
         for(ReactionRole role : getReactionRoles()) {
             if (role.hasTag(member)) {

@@ -1,4 +1,4 @@
-package nejidev.api;
+package nejidev.api.utils;
 
 import nejidev.main.MainApplication;
 import net.dv8tion.jda.api.entities.Emote;

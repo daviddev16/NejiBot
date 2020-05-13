@@ -6,7 +6,7 @@ import nejidev.events.RegisterListener;
 
 public class NejiBot extends Bot {
 
-    public static final String BOT_TOKEN = "NzA3Nzg2MzUzOTQwNjI3NDY2.XruVkg.8YNU3gZcFqFhFnn4vINilSt7NEw";
+    public static final String BOT_TOKEN = "<token here>";
     public static final long LISTENING_SERVER_ID = 707778877493215364L;
 
     public NejiBot(){

@@ -11,10 +11,8 @@ public class NejiBot extends Bot {
 
     public static final long REGISTER_CHANNEL_ID = 708748306049663067L;
 
-    public static final long LISTENING_SERVER_ID = 707778877493215364L;
-
     public NejiBot(){
-        super(BOT_TOKEN, LISTENING_SERVER_ID);
+        super(BOT_TOKEN, MainApplication.SERVER_ID);
     }
 
     private NejiBot(String token, long serverId) {

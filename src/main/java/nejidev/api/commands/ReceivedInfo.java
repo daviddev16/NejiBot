@@ -20,6 +20,8 @@ public class ReceivedInfo {
 
     private Member sender;
 
+    private MessageReceivedEvent event;
+
     public ReceivedInfo(String command, String contentRaw, String[] arguments){
         /*nome apos prefixo*/
         this.command = command;
@@ -38,13 +40,13 @@ public class ReceivedInfo {
     *O comando será verificado se bate com o enviado na mensagem antes de processar a query.*/
     public static void query(MessageReceivedEvent event, Consumer<ReceivedInfo> receivedInfoConsumer) {
 
-        String contentRaw = event.getMessage().getContentRaw();
+        String contentRaw = event.getMessage().getContentRaw().trim();
 
         /*verificar se existe um comando na string*/
-        if (contentRaw.startsWith(BaseCommand.COMMAND_PREFIX)) {
+        if (contentRaw.startsWith(CommandBase.COMMAND_PREFIX)) {
 
             /*remover prefixdo da string*/
-            contentRaw = contentRaw.substring(BaseCommand.COMMAND_PREFIX.length(), event.getMessage().getContentRaw().length());
+            contentRaw = contentRaw.substring(CommandBase.COMMAND_PREFIX.length(), event.getMessage().getContentRaw().length());
 
             /*dividir a string por parametro*/
             String[] arguments = StringUtils.split(contentRaw);
@@ -56,6 +58,8 @@ public class ReceivedInfo {
             ReceivedInfo receivedInfo = new ReceivedInfo(command, contentRaw, arguments);
 
             receivedInfo.setSender(event.getMember());
+            receivedInfo.setReceivedEvent(event);
+
             receivedInfo.setMentions(event.getMessage().getMentionedMembers());
 
             /*executar comando*/
@@ -82,24 +86,12 @@ public class ReceivedInfo {
         return command;
     }
 
-    public void setCommand(String command) {
-        this.command = command;
-    }
-
     public String getContentRaw() {
         return contentRaw;
     }
 
-    public void setContentRaw(String contentRaw) {
-        this.contentRaw = contentRaw;
-    }
-
     public String[] getArguments() {
         return arguments;
-    }
-
-    public void setArguments(String[] arguments) {
-        this.arguments = arguments;
     }
 
     public List<Member> getMentions() {
@@ -108,6 +100,14 @@ public class ReceivedInfo {
 
     public void setMentions(List<Member> mentions) {
         this.mentions = mentions;
+    }
+
+    public void setReceivedEvent(MessageReceivedEvent event){
+        this.event = event;
+    }
+
+    public MessageReceivedEvent getReceiverEvent(){
+        return event;
     }
 
     public void setSender(Member member){

@@ -6,6 +6,7 @@ import nejidev.main.*;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -65,18 +66,16 @@ public abstract class Banner extends ListenerAdapter {
     /*Esta função será chamada quando o banner já estiver adicionado ao bot sem erros.*/
     public abstract void onAdded();
 
-
-    @SuppressWarnings("ConstantConditions")
     public void onMessageReactionAdd(@Nonnull MessageReactionAddEvent event) {
 
-        if (event.getUser().isBot()) {
+        if (requireNonNull(event.getUser()).isBot()) {
             return;
         }
         if ((event.getChannel().getIdLong() == getTextChannelId()) &&
                 event.getMessageId().equalsIgnoreCase(Long.toString(getMessageId()))) {
 
             ReactionRole foundRole = findReactionRole(event.getReactionEmote().getEmote());
-            foundRole = requireNonNull(foundRole);
+            requireNonNull(foundRole);
             addMemberToReactionRole(foundRole, event.getMember());
         }
     }
@@ -90,7 +89,11 @@ public abstract class Banner extends ListenerAdapter {
         assert channel != null;
         for(ReactionRole roles : getReactionRoles()){
             channel.removeReactionById(messageId, Utils.findEmoteByName(roles.getEmoteName()), member.getUser()).queue();
-            roles.removeMember(member).queue();
+            AuditableRestAction<Void> action = roles.removeMember(member);
+            if(action != null) {
+                action.queue();
+            }
+
         }
     }
 
@@ -136,27 +139,17 @@ public abstract class Banner extends ListenerAdapter {
         this.reactionRoles = reactionRoles;
     }
 
-    public String getBannerPath(){
-        return bannerPath;
-    }
-
     public void setBannerPath(String bannerPath){
         this.bannerPath = bannerPath;
     }
 
     /*adicionar role ao jogador*/
     private void addMemberToReactionRole(ReactionRole role, Member member){
-        role.addMember(member).queue();
+        AuditableRestAction<Void>  action = role.addMember(member);
+        if(action != null) {
+            action.queue();
+        }
     }
 
-    /*checar se o membro possui a tag*/
-    private boolean hasAnyTag(Member member){
-        for(ReactionRole role : getReactionRoles()) {
-            if (role.hasTag(member)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
 }

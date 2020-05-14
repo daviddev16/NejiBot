@@ -1,8 +1,11 @@
 package nejidev.api.commands;
 
+import nejidev.api.Bot;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import javax.annotation.Nonnull;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -12,12 +15,13 @@ import java.util.Objects;
 public class CommandManager extends ListenerAdapter {
 
     /*lista de comandos*/
-    private final List<BaseCommand> commands;
+    private final List<CommandBase> commands;
 
     public CommandManager(){
         commands = new ArrayList<>();
     }
 
+    @Override
     public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
         /*verificar se quem enviou a mensagem não é um bot*/
         if(Objects.requireNonNull(event.getMember()).getUser().isBot()){
@@ -30,22 +34,30 @@ public class CommandManager extends ListenerAdapter {
                 if(cmd.accept(receivedInfo)){
 
                     /*executar comando assim que for achado pela query*/
-                    cmd.execute(receivedInfo);
+                    if(cmd.execute(receivedInfo)) {
+                        event.getTextChannel().deleteMessageById(event.getMessageId()).delay(Duration.ofSeconds(1L)).queue();
+                    }
                 }
             }));
         }
     }
     /*verificar se ha um comando passado no chat*/
     private boolean containsCommandOnMessage(MessageReceivedEvent event){
-        return event.getMessage().getContentRaw().startsWith(BaseCommand.COMMAND_PREFIX);
+        return event.getMessage().getContentRaw().startsWith(CommandBase.COMMAND_PREFIX);
     }
 
+    /*conectar com o bot*/
+    public void attachListener(Bot bot){
+        bot.getJavaDiscordAPI().addEventListener(this);
+    }
+
+
     /*registrar comando*/
-    public void registerCommand(BaseCommand command){
+    public void registerCommand(CommandBase command){
         commands.add(command);
     }
 
-    public List<BaseCommand> getCommands(){
+    public List<CommandBase> getCommands(){
         return commands;
     }
 }

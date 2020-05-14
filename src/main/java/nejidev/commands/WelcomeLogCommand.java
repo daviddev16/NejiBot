@@ -16,7 +16,6 @@ public class WelcomeLogCommand extends CommandBase {
 
     @Override
     public boolean execute(ReceivedInfo receivedInfo) {
-
         try {
             receivedInfo.getReceiverEvent().getTextChannel().sendFile(ImageCreator.createWelcome(receivedInfo.getSender().getUser()), "msmsms.png").queue();
         }catch (Exception e){

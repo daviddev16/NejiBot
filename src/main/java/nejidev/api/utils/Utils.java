@@ -45,6 +45,7 @@ public class Utils {
 
     }
 
+    @Deprecated
     public static Emote findEmoteByName(String name){
         Guild guild = MainApplication.getBot().getOfficialGuild();
         for(Emote emotes : guild.getEmotes()){

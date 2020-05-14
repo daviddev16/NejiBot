@@ -1,6 +1,7 @@
 package nejidev.banners;
 
 import nejidev.api.Banner;
+import nejidev.api.NejiAPI;
 import nejidev.api.ReactionRole;
 import nejidev.main.NejiBot;
 
@@ -23,9 +24,7 @@ public class ProgrammingLanguageBanner extends Banner {
 
     public boolean onAwake() {
 
-        setTextChannelId(NejiBot.REGISTER_CHANNEL_ID);
-        setDisplayTagRoleId(707784153252495424L);
-
+        setTextChannelId(NejiAPI.REGISTER_CHANNEL_ID);
         addReactionRoles(new ReactionRole("CSharp", "707782080377126962"));
         addReactionRoles(new ReactionRole("CPP", "707782500012916776"));
         addReactionRoles(new ReactionRole("JavaScript", "707782421055275018"));

@@ -1,6 +1,7 @@
 package nejidev.banners;
 
 import nejidev.api.Banner;
+import nejidev.api.NejiAPI;
 import nejidev.api.ReactionRole;
 import nejidev.main.NejiBot;
 
@@ -21,9 +22,7 @@ public class GameEngineBanner extends Banner {
 
     public boolean onAwake() {
 
-        setTextChannelId(NejiBot.REGISTER_CHANNEL_ID);
-        setDisplayTagRoleId(707784246667903046L);
-
+        setTextChannelId(NejiAPI.REGISTER_CHANNEL_ID);
         addReactionRoles(new ReactionRole("Godot", "707782962019565608"));
         addReactionRoles(new ReactionRole("Unity", "707782656162529340"));
         addReactionRoles(new ReactionRole("Unreal", "707782892750897172"));

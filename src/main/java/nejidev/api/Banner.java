@@ -1,6 +1,5 @@
 package nejidev.api;
 
-import nejidev.api.utils.GuildUtils;
 import nejidev.api.utils.Utils;
 import nejidev.main.*;
 import net.dv8tion.jda.api.entities.*;
@@ -30,8 +29,6 @@ public abstract class Banner extends ListenerAdapter {
     /*Guild do servidor*/
     private Guild guild;
 
-    private long displayTagRoleId;
-
     /**
      * Esta classe permite você criar banners personalizados
      * em forma de mensagem que exibirá reações, e essas reações
@@ -42,29 +39,56 @@ public abstract class Banner extends ListenerAdapter {
         this.setReactionRoles(new ArrayList<>());
     }
 
+    /*Esta função será chamada quando o banner for adicionado ao bot*/
+    public abstract boolean onAwake();
+
+    /*Esta função será chamada quando o banner já estiver adicionado ao bot sem erros.*/
+    public abstract void onAdded();
 
     /*Caso ainda não exista a mensagem, use esta função para criar a mensagem personalizada*/
+    @Deprecated
     public Banner displayBanner(){
 
-        Bot bot = MainApplication.getBot();
-        TextChannel channel = bot.getOfficialGuild().getTextChannelById(textChannelId);
+        TextChannel channel = NejiAPI.getServerTextChannel(textChannelId);
 
         assert channel != null;
         channel.sendFile(requireNonNull(Utils.getInputStream(bannerPath)), "banner.png").queue(message -> {
 
             for(ReactionRole reactionRoles : getReactionRoles())
-                message.addReaction(GuildUtils.findEmote(reactionRoles.getEmoteName(), bot)).queue();
+                message.addReaction(NejiAPI.getServerEmoteByRole(reactionRoles)).queue();
 
         });
 
         return this;
     }
 
-    /*Esta função será chamada quando o banner for adicionado ao bot*/
-    public abstract boolean onAwake();
+    /*limpar cargos do membro*/
+    public void clearMember(Member member){
 
-    /*Esta função será chamada quando o banner já estiver adicionado ao bot sem erros.*/
-    public abstract void onAdded();
+        TextChannel channel = NejiAPI.getServerTextChannel(textChannelId);
+
+        assert channel != null;
+
+        for(ReactionRole roles : getReactionRoles()){
+
+            channel.removeReactionById(messageId, Utils.findEmoteByName(roles.getEmoteName()), member.getUser()).queue();
+            AuditableRestAction<Void> action = roles.removeMember(member);
+
+            if(action != null) {
+                action.queue();
+            }
+
+        }
+    }
+
+    private ReactionRole findReactionRole(Emote emote){
+        for(ReactionRole roles : getReactionRoles()){
+            if(emote.getName().equalsIgnoreCase(roles.getEmoteName())){
+                return roles;
+            }
+        }
+        throw new NullPointerException("Não foi possivel achar o ReactionRole.");
+    }
 
     public void onMessageReactionAdd(@Nonnull MessageReactionAddEvent event) {
 
@@ -80,39 +104,17 @@ public abstract class Banner extends ListenerAdapter {
         }
     }
 
-    /*limpar cargos do membro*/
-    public void clearMember(Member member){
-
-        Bot bot = MainApplication.getBot();
-        TextChannel channel = bot.getOfficialGuild().getTextChannelById(textChannelId);
-
-        assert channel != null;
-        for(ReactionRole roles : getReactionRoles()){
-            channel.removeReactionById(messageId, Utils.findEmoteByName(roles.getEmoteName()), member.getUser()).queue();
-            AuditableRestAction<Void> action = roles.removeMember(member);
-            if(action != null) {
-                action.queue();
-            }
-
+    /*adicionar role ao jogador*/
+    private void addMemberToReactionRole(ReactionRole role, Member member){
+        AuditableRestAction<Void>  action = role.addMember(member);
+        if(action != null) {
+            action.queue();
         }
-    }
-
-    public ReactionRole findReactionRole(Emote emote){
-        for(ReactionRole roles : getReactionRoles()){
-            if(emote.getName().equalsIgnoreCase(roles.getEmoteName())){
-                return roles;
-            }
-        }
-        throw new NullPointerException("Could not found the ReactionRole.");
     }
 
     /*adicionar role por reação*/
     public void addReactionRoles(ReactionRole reactionRole){
         getReactionRoles().add(reactionRole);
-    }
-
-    public void setDisplayTagRoleId(long displayTagRoleId){
-        this.displayTagRoleId = displayTagRoleId;
     }
 
     public List<ReactionRole> getReactionRoles(){
@@ -141,14 +143,6 @@ public abstract class Banner extends ListenerAdapter {
 
     public void setBannerPath(String bannerPath){
         this.bannerPath = bannerPath;
-    }
-
-    /*adicionar role ao jogador*/
-    private void addMemberToReactionRole(ReactionRole role, Member member){
-        AuditableRestAction<Void>  action = role.addMember(member);
-        if(action != null) {
-            action.queue();
-        }
     }
 
 

@@ -1,5 +1,6 @@
 package nejidev.events;
 
+import nejidev.api.NejiAPI;
 import nejidev.main.NejiBot;
 import nejidev.utils.ImageCreator;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -15,10 +16,13 @@ public class WelcomeListener extends ListenerAdapter  {
     /*enviar banner quando membro entrar no servidor*/
     @Override
     public void onGuildMemberJoin(@Nonnull GuildMemberJoinEvent event) {
+
+        System.out.println(event.getUser().getName());
+
         if(event.getUser().isBot()){
             return;
         }
-        TextChannel welcomeChannel = event.getGuild().getTextChannelById(NejiBot.WELCOME_CHANNEL_ID);
+        TextChannel welcomeChannel = NejiAPI.getServerTextChannel(NejiAPI.WELCOME_CHANNEL_ID);
         try {
             assert welcomeChannel != null;
             welcomeChannel.sendFile(ImageCreator.createWelcome(event.getUser()), "welcome-" + event.getUser().getName() + ".png").queue();

@@ -1,6 +1,7 @@
 package nejidev.api;
 
 import nejidev.main.MainApplication;
+import nejidev.main.NejiBot;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -37,7 +38,7 @@ public class ReactionRole {
 
     public synchronized AuditableRestAction<Void> addMember(Member member){
         if(!hasTag(member)){
-            Guild guild = MainApplication.getBot().getOfficialGuild();
+            Guild guild = NejiAPI.getServerGuild();
             return guild.addRoleToMember(member, Objects.requireNonNull(guild.getRoleById(getRoleId())));
         }
         return null;
@@ -45,7 +46,7 @@ public class ReactionRole {
 
     public synchronized AuditableRestAction<Void> removeMember(Member member){
         if(hasTag(member)) {
-            Guild guild = MainApplication.getBot().getOfficialGuild();
+            Guild guild = NejiAPI.getServerGuild();
             return guild.removeRoleFromMember(member, Objects.requireNonNull(guild.getRoleById(getRoleId())));
         }
         return null;

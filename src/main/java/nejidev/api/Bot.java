@@ -11,6 +11,7 @@ import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 public abstract class Bot {
 
@@ -18,22 +19,21 @@ public abstract class Bot {
 
     private Guild serverGuild;
 
-    private volatile List<Banner> banners;
+    private final List<Banner> banners;
 
-    private String token;
+    private final String token;
 
-    private long serverId;
-
-    public Bot(String token, long serverId) {
+    public Bot(String token) {
         this.token = token;
-        this.serverId = serverId;
         banners = new ArrayList<>();
     }
 
+    /*Atualizar status do bot*/
     public void updateActivity(Activity.ActivityType type, String activity){
         javaDiscordAPI.getPresence().setActivity(Activity.of(type, activity));
     }
 
+    /*adicionar banner ao servidor*/
     public void addBanner(@NotNull Banner banner){
         if(banner.onAwake()) {
             try {
@@ -46,17 +46,6 @@ public abstract class Bot {
             }
         }
     }
-
-    public void displayAll(){
-        for(Banner banner : banners){
-            banner.displayBanner();
-        }
-    }
-
-    public List<Banner> getBanners(){
-        return banners;
-    }
-
     public JDA getJavaDiscordAPI(){
         return javaDiscordAPI;
     }
@@ -65,27 +54,26 @@ public abstract class Bot {
         return serverGuild;
     }
 
-    public void setServerGuild(Guild guild){
-        serverGuild = guild;
-    }
-
     /*essa função será chamada quando o bot for carregado e conectado*/
     public abstract void onConnected();
 
+    /*quando o bot estiver iniciando*/
+    public abstract void onLoad(JDABuilder builder) throws LoginException, InterruptedException;
+
     /*carregar a JDA*/
-    public Bot load() throws LoginException {
-
+    public Bot load(long serverId) throws LoginException, InterruptedException {
         JDABuilder builder = JDABuilder.createDefault(token);
-        javaDiscordAPI = builder.build();
-
-        serverGuild = javaDiscordAPI.getGuildById(serverId);
-
+        javaDiscordAPI = builder.setCallbackPool(Executors.newSingleThreadScheduledExecutor())
+                .build().awaitReady();
         javaDiscordAPI.addEventListener(new ListenerAdapter() {
             public void onStatusChange(@Nonnull StatusChangeEvent event) {
-                if(event.getNewStatus() == JDA.Status.CONNECTED) onConnected();
+                if(event.getNewStatus() == JDA.Status.CONNECTED) {
+                    onConnected();
+                    serverGuild = event.getJDA().getGuildById(serverId);
+                }
             }
         });
-
+        onLoad(builder);
         return this;
     }
 

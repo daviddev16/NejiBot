@@ -2,17 +2,35 @@ package nejidev.api;
 
 import nejidev.api.commands.CommandBase;
 import nejidev.api.commands.ReceivedInfo;
+import nejidev.api.utils.Utils;
 import nejidev.main.MainApplication;
 import nejidev.main.NejiBot;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Emote;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.*;
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+import javax.annotation.Nullable;
 import java.awt.*;
+import java.io.*;
+import java.util.Objects;
+import java.util.Random;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 public final class NejiAPI {
+
+
+    public interface IBotActivity {
+
+        Activity.ActivityType getType();
+
+        String getMessage();
+
+    }
+
+    public static final Random random = new Random();
 
     public static final long REGISTER_CHANNEL_ID = 708748306049663067L;
 
@@ -90,7 +108,7 @@ public final class NejiAPI {
                 .setDescription(msg)
                 .setThumbnail(info.getSender().getUser().getAvatarUrl())
                 .setColor(Color.decode(hexadecimalColor))
-                .setFooter("Comando executado pelo "  + getSelfName());
+                .setFooter("Comando executado pelo "  + getSelfName(), info.getSender().getUser().getAvatarUrl());
     }
 
     public static EmbedBuilder buildMsg(ReceivedInfo info, String erro, MessageEmbed.Field format) {
@@ -99,15 +117,84 @@ public final class NejiAPI {
 
         builder.setAuthor("Resultados para " + info.getSender().getUser().getName());
         builder.setTitle("Algo deu errado :/ Não foi possivel executar o comando.");
-
-        builder.setDescription(erro);
         builder.setThumbnail(MainApplication.getBot().getJavaDiscordAPI().getSelfUser().getAvatarUrl());
+        builder.setDescription(erro);
         builder.setColor(Color.red.darker());
         if (format != null) {
             builder.addField(format);
         }
-        builder.setFooter("Erro registrado pelo " + getSelfName());
-
+        builder.setFooter("Erro registrado pelo " + getSelfName(),MainApplication.getBot().getJavaDiscordAPI().getSelfUser().getAvatarUrl());
         return builder;
     }
+
+    public synchronized static void updateActivity(Activity.ActivityType type, String msg){
+        MainApplication.getBot().updateActivity(type, msg);
+    }
+
+    public synchronized static void updateActivity(IBotActivity botActivity){
+        MainApplication.getBot().updateActivity(botActivity.getType(), botActivity.getMessage());
+    }
+
+    private static String read(String resourceFile) throws IOException {
+        StringBuffer buffer = new StringBuffer();
+        InputStream in = Utils.getInputStream("/"+ resourceFile);
+        Objects.requireNonNull(in);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+        String line;
+        while((line = reader.readLine()) != null) {
+            buffer.append(line).append('\n');
+        }
+        return buffer.toString();
+    }
+
+    private static JSONArray getActivityMessages() throws IOException {
+        JSONObject o = new JSONObject(read("config.json"));
+        return o.getJSONArray("activities");
+    }
+
+    private static void validateActivityJSON(JSONObject o){
+        if(o == null)
+            throw new NullPointerException("JSONObject é nulo.");
+        if(!o.has("text") || !o.has("type"))
+            throw new NullPointerException("JSONObject não possui todos os parametros necessarios.");
+    }
+
+    public static void setupActivityUpdater() {
+        Thread t = new Thread(() -> {
+            try {
+                for(;;) {
+                    IBotActivity activity = catchRandomActivity();
+                    Objects.requireNonNull(activity);
+                    updateActivity(activity);
+                    Thread.sleep(60 * 1000L);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        t.start();
+    }
+
+    @Nullable
+    public synchronized static IBotActivity catchRandomActivity(){
+        try {
+            JSONArray activities = getActivityMessages();
+            Objects.requireNonNull(activities);
+            JSONObject randomJSONOBject = activities.getJSONObject(random.nextInt(activities.length()));
+            validateActivityJSON(randomJSONOBject);
+            return new IBotActivity() {
+                public Activity.ActivityType getType() {
+                    return Activity.ActivityType.valueOf(randomJSONOBject.getString("type").toUpperCase());
+                }
+                @Override
+                public String getMessage() {
+                    return randomJSONOBject.getString("text");
+                }
+            };
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

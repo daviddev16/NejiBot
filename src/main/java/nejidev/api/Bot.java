@@ -29,7 +29,7 @@ public abstract class Bot {
     }
 
     /*Atualizar status do bot*/
-    public void updateActivity(Activity.ActivityType type, String activity){
+    public synchronized void updateActivity(Activity.ActivityType type, String activity){
         javaDiscordAPI.getPresence().setActivity(Activity.of(type, activity));
     }
 
@@ -57,14 +57,10 @@ public abstract class Bot {
     /*essa função será chamada quando o bot for carregado e conectado*/
     public abstract void onConnected();
 
-    /*quando o bot estiver iniciando*/
-    public abstract void onLoad(JDABuilder builder) throws LoginException, InterruptedException;
-
     /*carregar a JDA*/
     public Bot load(long serverId) throws LoginException, InterruptedException {
         JDABuilder builder = JDABuilder.createDefault(token);
-        javaDiscordAPI = builder.setCallbackPool(Executors.newSingleThreadScheduledExecutor())
-                .build().awaitReady();
+        javaDiscordAPI = builder.setCallbackPool(Executors.newSingleThreadScheduledExecutor()).build();
         javaDiscordAPI.addEventListener(new ListenerAdapter() {
             public void onStatusChange(@Nonnull StatusChangeEvent event) {
                 if(event.getNewStatus() == JDA.Status.CONNECTED) {
@@ -73,7 +69,6 @@ public abstract class Bot {
                 }
             }
         });
-        onLoad(builder);
         return this;
     }
 

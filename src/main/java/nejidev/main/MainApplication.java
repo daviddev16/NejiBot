@@ -2,6 +2,7 @@ package nejidev.main;
 
 import nejidev.api.Bot;
 import javax.security.auth.login.LoginException;
+import java.io.IOException;
 
 public class MainApplication {
 

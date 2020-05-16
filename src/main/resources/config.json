@@ -1,0 +1,36 @@
+{
+  "activities": [
+    {
+      "text": "a JDA",
+      "type": "listening"
+    },
+    {
+      "text": "ao !help",
+      "type": "watching"
+    },
+    {
+      "text": "Minecraft",
+      "type": "default"
+    },
+    {
+      "text": "as ordem do Neji",
+      "type": "listening"
+    },
+    {
+      "text": "eu sou open-source :) \n github.com/daviddev16/NejiBot",
+      "type": "watching"
+    },
+    {
+      "text": "Rick and Morty",
+      "type": "watching"
+    },
+    {
+      "text": "Minhas configurações",
+      "type": "listening"
+    },
+    {
+      "text": "#TeamJava :)",
+      "type": "watching"
+    }
+  ]
+}

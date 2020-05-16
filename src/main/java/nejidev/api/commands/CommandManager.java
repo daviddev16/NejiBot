@@ -1,8 +1,6 @@
 package nejidev.api.commands;
 
 import nejidev.api.Bot;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import javax.annotation.Nonnull;
@@ -48,8 +46,8 @@ public class CommandManager extends ListenerAdapter {
     }
 
     /*conectar com o bot*/
-    public void attachListener(JDABuilder builder){
-        builder.addEventListeners(this);
+    public void attachListener(Bot bot){
+        bot.getJavaDiscordAPI().addEventListener(this);
     }
 
 

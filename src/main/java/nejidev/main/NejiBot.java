@@ -1,22 +1,22 @@
 package nejidev.main;
 
-import nejidev.api.Banner;
 import nejidev.api.Bot;
 import nejidev.api.NejiAPI;
 import nejidev.api.commands.CommandManager;
-import nejidev.api.BannerType;
 import nejidev.banners.GameEngineBanner;
 import nejidev.banners.ProgrammingLanguageBanner;
+import nejidev.commands.AvatarCommand;
 import nejidev.commands.ClearTagCommand;
-import nejidev.commands.WelcomeLogCommand;
+import nejidev.commands.CountCommand;
+import nejidev.commands.HelpCommand;
 import nejidev.events.WelcomeListener;
-import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity;
 
-import javax.security.auth.login.LoginException;
+import java.util.TimerTask;
 
 public class NejiBot extends Bot {
 
-    public static final String BOT_TOKEN = "<token do bot>";
+    public static final String BOT_TOKEN = "token";
 
     private static CommandManager commandManager;
 
@@ -32,17 +32,14 @@ public class NejiBot extends Bot {
         super(token);
     }
 
-    public void onLoad(JDABuilder builder) throws LoginException, InterruptedException  {
-
-        commandManager = new CommandManager();
-        commandManager.attachListener(builder);
-
-        builder.addEventListeners(new WelcomeListener());
-    }
-
     public void onConnected() {
 
         System.out.println("connected.");
+
+        getJavaDiscordAPI().addEventListener(new WelcomeListener());
+
+        commandManager = new CommandManager();
+        commandManager.attachListener(this);
 
         programmingLanguageBanner = new ProgrammingLanguageBanner();
         addBanner(programmingLanguageBanner);
@@ -51,10 +48,12 @@ public class NejiBot extends Bot {
         addBanner(gameEngineBanner);
 
         NejiAPI.registerCommand(new ClearTagCommand());
-        NejiAPI.registerCommand(new WelcomeLogCommand());
+        NejiAPI.registerCommand(new HelpCommand());
+        NejiAPI.registerCommand(new CountCommand());
+        NejiAPI.registerCommand(new AvatarCommand());
+
+        NejiAPI.setupActivityUpdater();
     }
-
-
 
     public String getName(){
         return "Ajudante Nejizin";

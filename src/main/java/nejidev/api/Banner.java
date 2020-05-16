@@ -45,7 +45,7 @@ public abstract class Banner extends ListenerAdapter {
     /*Esta função será chamada quando o banner já estiver adicionado ao bot sem erros.*/
     public abstract void onAdded();
 
-    /*Caso ainda não exista a mensagem, use esta função para criar a mensagem personalizada*/
+    /*Caso ainda não exista a mensagem, use esta função para criar a mensagem personalizadwa*/
     @Deprecated
     public Banner displayBanner(){
 

@@ -10,9 +10,13 @@ import nejidev.banners.GameEngineBanner;
 import nejidev.banners.ProgrammingLanguageBanner;
 import nejidev.commands.*;
 import nejidev.events.WelcomeListener;
+import nejidev.tags.HouseTagEvent;
+
+import javax.annotation.Nullable;
 
 public class NejiBot extends Bot {
 
+    @Nullable
     public static final String BOT_TOKEN = "<bot token>";
 
     private static CommandManager commandManager;
@@ -57,6 +61,7 @@ public class NejiBot extends Bot {
         NejiAPI.registerCommand(new DesmuteCommand());
 
         NejiAPI.registerTag(Tag.createTag("feedback", FeedbackTagEvent::new));
+        NejiAPI.registerTag(Tag.createTag("houses", HouseTagEvent::new));
 
         NejiAPI.setupActivityUpdater();
     }

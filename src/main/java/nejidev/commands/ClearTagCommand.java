@@ -1,11 +1,10 @@
 package nejidev.commands;
 
-import nejidev.api.Banner;
-import nejidev.api.EmoteServerType;
+import nejidev.api.emotes.EmoteServerType;
 import nejidev.api.NejiAPI;
 import nejidev.api.commands.CommandBase;
 import nejidev.api.commands.ReceivedInfo;
-import nejidev.api.BannerType;
+import nejidev.banners.BannerType;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class ClearTagCommand extends CommandBase {

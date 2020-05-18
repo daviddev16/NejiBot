@@ -1,9 +1,8 @@
 package nejidev.banners;
 
-import nejidev.api.Banner;
+import nejidev.api.banners.Banner;
 import nejidev.api.NejiAPI;
-import nejidev.api.ReactionRole;
-import nejidev.main.NejiBot;
+import nejidev.api.banners.ReactionRole;
 
 public class ProgrammingLanguageBanner extends Banner {
 
@@ -14,12 +13,6 @@ public class ProgrammingLanguageBanner extends Banner {
 
     private ProgrammingLanguageBanner(long messageId) {
         super(messageId);
-    }
-
-    public Banner displayBanner() {
-        setBannerPath("/banner_register.png");
-        super.displayBanner();
-        return this;
     }
 
     public boolean onAwake() {

@@ -9,6 +9,13 @@ import java.util.Map;
 
 public class ImageUtils {
 
+    /*
+    * Essa classe foi criada por @jittagornp
+    *
+    * Gist: https://gist.github.com/jittagornp/6c7fcdab388fe4863c34
+    *
+    * */
+
     /*pegar a cor que predomina na imagem*/
     public static String getDominantColor(BufferedImage image) {
         Map<Integer, Integer> colorMap = new HashMap<>();

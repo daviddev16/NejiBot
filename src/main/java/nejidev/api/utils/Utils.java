@@ -18,6 +18,7 @@ import java.net.URLConnection;
 
 public class Utils {
 
+    /*acessar InputStream de dentro das Resources*/
     public static @Nullable InputStream getInputStream(@NotNull String path) throws RuntimeException {
         @Nullable InputStream result = null;
         try {
@@ -28,6 +29,10 @@ public class Utils {
         return result;
     }
 
+    /*
+    * Converter um BufferedImage em um InputStream, necessario para enviar
+    * imagens pela JDA
+    * */
     public static InputStream convertImage(BufferedImage image) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(image, "png", baos );
@@ -37,6 +42,9 @@ public class Utils {
        return new ByteArrayInputStream(imageInByte);
     }
 
+    /**
+     * transformar imagem da url em uma Imagem em java.
+     */
     public static Image openImage(String url) throws IOException {
         URL urll = new URL(url);
         URLConnection connection = urll.openConnection();
@@ -45,6 +53,22 @@ public class Utils {
 
     }
 
+    /*remover indice de uma array*/
+    public static String[] removeIndex(String[] arr,  int index) {
+        if (arr == null || index < 0 || index >= arr.length) {
+            return arr;
+        }
+        String[] anotherArray = new String[arr.length - 1];
+        for (int i = 0, k = 0; i < arr.length; i++) {
+            if (i == index) {
+                continue;
+            }
+            anotherArray[k++] = arr[i];
+        }
+        return anotherArray;
+    }
+
+    /*Metodo substituido em NejiAPI*/
     @Deprecated
     public static Emote findEmoteByName(String name){
         Guild guild = MainApplication.getBot().getOfficialGuild();

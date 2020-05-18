@@ -1,5 +1,6 @@
-package nejidev.api;
+package nejidev.api.app;
 
+import nejidev.api.banners.Banner;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -58,7 +59,7 @@ public abstract class Bot {
     public abstract void onConnected();
 
     /*carregar a JDA*/
-    public Bot load(long serverId) throws LoginException, InterruptedException {
+    public Bot load(long serverId) throws LoginException {
         JDABuilder builder = JDABuilder.createDefault(token);
         javaDiscordAPI = builder.setCallbackPool(Executors.newSingleThreadScheduledExecutor()).build();
         javaDiscordAPI.addEventListener(new ListenerAdapter() {

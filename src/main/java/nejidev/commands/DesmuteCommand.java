@@ -1,6 +1,6 @@
 package nejidev.commands;
 
-import nejidev.api.EmoteServerType;
+import nejidev.api.emotes.EmoteServerType;
 import nejidev.api.NejiAPI;
 import nejidev.api.commands.CommandBase;
 import nejidev.api.commands.ReceivedInfo;
@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 
 import java.awt.*;
+import java.util.Objects;
 
 public class DesmuteCommand extends CommandBase {
 
@@ -30,6 +31,7 @@ public class DesmuteCommand extends CommandBase {
         if(checkArgs(ri.getArguments(), 1)) {
 
             Role roleSilenciado = NejiAPI.getServerGuild().getRoleById(NejiAPI.SILENCIADO);
+            Objects.requireNonNull(roleSilenciado);
             NejiAPI.getServerGuild().removeRoleFromMember(ri.getMentions().get(0), roleSilenciado).queue();
 
             EmbedBuilder builder = new EmbedBuilder();

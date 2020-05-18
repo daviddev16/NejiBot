@@ -1,6 +1,6 @@
 package nejidev.commands;
 
-import nejidev.api.EmoteServerType;
+import nejidev.api.emotes.EmoteServerType;
 import nejidev.api.NejiAPI;
 import nejidev.api.commands.CommandBase;
 import nejidev.api.commands.ReceivedInfo;

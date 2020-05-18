@@ -1,5 +1,6 @@
 package nejidev.api.commands;
 
+import nejidev.api.utils.Utils;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
@@ -7,21 +8,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-/*Classe responsavel por enviar as informações do comando dado pelo Membro na mensagem. */
+
 public class ReceivedInfo {
 
+    /*comando executado*/
     private String command;
 
+    /*conteudo inteiro da mensagem*/
     private String contentRaw;
 
+    /**
+     * lista de parametros pasados pelo comando.
+     *
+     * Exemplo:
+     * !test a b c @User#1429
+     *
+     * Output: [a, b, c, @<id_do_user>]
+     *
+     * */
     private String[] arguments;
 
+    /*lista de membros mencionados na mensagem.*/
     private List<Member> mentions;
 
+    /*membro que enviou o comando*/
     private Member sender;
 
+    /*evento registrado*/
     private MessageReceivedEvent event;
 
+    /*Classe responsavel por enviar as informações do comando dado pelo Membro na mensagem. */
     public ReceivedInfo(String command, String contentRaw, String[] arguments){
         /*nome apos prefixo*/
         this.command = command;
@@ -53,7 +69,7 @@ public class ReceivedInfo {
             String command = arguments[0];
 
             /*remover index do nome do comando*/
-            arguments = removeIndex(arguments, 0);
+            arguments = Utils.removeIndex(arguments, 0);
 
             ReceivedInfo receivedInfo = new ReceivedInfo(command, contentRaw, arguments);
 
@@ -65,21 +81,6 @@ public class ReceivedInfo {
             /*executar comando*/
             receivedInfoConsumer.accept(receivedInfo);
         }
-    }
-
-    /*remover indice de uma array*/
-    private static String[] removeIndex(String[] arr,  int index) {
-        if (arr == null || index < 0 || index >= arr.length) {
-            return arr;
-        }
-        String[] anotherArray = new String[arr.length - 1];
-        for (int i = 0, k = 0; i < arr.length; i++) {
-            if (i == index) {
-                continue;
-            }
-            anotherArray[k++] = arr[i];
-        }
-        return anotherArray;
     }
 
     public String getCommand() {
@@ -98,11 +99,11 @@ public class ReceivedInfo {
         return mentions;
     }
 
-    public void setMentions(List<Member> mentions) {
+    private void setMentions(List<Member> mentions) {
         this.mentions = mentions;
     }
 
-    public void setReceivedEvent(MessageReceivedEvent event){
+    private void setReceivedEvent(MessageReceivedEvent event){
         this.event = event;
     }
 
@@ -110,7 +111,7 @@ public class ReceivedInfo {
         return event;
     }
 
-    public void setSender(Member member){
+    private void setSender(Member member){
         this.sender = member;
     }
 

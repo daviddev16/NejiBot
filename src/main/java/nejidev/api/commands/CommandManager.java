@@ -1,6 +1,6 @@
 package nejidev.api.commands;
 
-import nejidev.api.Bot;
+import nejidev.api.app.Bot;
 import nejidev.api.listeners.IAttachable;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;

@@ -1,5 +1,6 @@
 package nejidev.utils;
 
+import nejidev.api.emotes.EmoteServerType;
 import nejidev.api.NejiAPI;
 import nejidev.api.utils.ImageUtils;
 import nejidev.api.utils.Utils;
@@ -39,7 +40,7 @@ public class ImageCreator {
         graphics.drawString(user.getName() + " !", gap, gap + 32+23);
 
         /*simbolo happy*/
-        BufferedImage happy = ImageUtils.createBufferedImage(Utils.openImage(NejiAPI.happy().getImageUrl()).getScaledInstance(32, 54, Image.SCALE_SMOOTH));
+        BufferedImage happy = ImageUtils.createBufferedImage(Utils.openImage(NejiAPI.getEmote(EmoteServerType.HAPPY).getImageUrl()).getScaledInstance(32, 54, Image.SCALE_SMOOTH));
         graphics.drawImage(happy, 2 + gap,(128-32) - gap, null);
 
         /*mostrar avatar*/

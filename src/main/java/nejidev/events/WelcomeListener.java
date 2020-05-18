@@ -2,6 +2,7 @@ package nejidev.events;
 
 import nejidev.api.NejiAPI;
 import nejidev.utils.ImageCreator;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -17,6 +18,10 @@ public class WelcomeListener extends ListenerAdapter {
         if(event.getUser().isBot()){
             return;
         }
+
+        Role playerRole = NejiAPI.getServerGuild().getRoleById(707783643459878923L);
+        NejiAPI.getServerGuild().addRoleToMember(event.getMember(), playerRole).queue();
+
         TextChannel welcomeChannel = NejiAPI.getServerTextChannel(NejiAPI.WELCOME_CHANNEL_ID);
         try {
             assert welcomeChannel != null;

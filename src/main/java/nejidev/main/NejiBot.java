@@ -5,14 +5,8 @@ import nejidev.api.NejiAPI;
 import nejidev.api.commands.CommandManager;
 import nejidev.banners.GameEngineBanner;
 import nejidev.banners.ProgrammingLanguageBanner;
-import nejidev.commands.AvatarCommand;
-import nejidev.commands.ClearTagCommand;
-import nejidev.commands.CountCommand;
-import nejidev.commands.HelpCommand;
+import nejidev.commands.*;
 import nejidev.events.WelcomeListener;
-import net.dv8tion.jda.api.entities.Activity;
-
-import java.util.TimerTask;
 
 public class NejiBot extends Bot {
 
@@ -51,6 +45,8 @@ public class NejiBot extends Bot {
         NejiAPI.registerCommand(new HelpCommand());
         NejiAPI.registerCommand(new CountCommand());
         NejiAPI.registerCommand(new AvatarCommand());
+        NejiAPI.registerCommand(new MuteCommand());
+        NejiAPI.registerCommand(new DesmuteCommand());
 
         NejiAPI.setupActivityUpdater();
     }

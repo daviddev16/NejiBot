@@ -23,11 +23,11 @@ public class CommandManager extends ListenerAdapter {
     @Override
     public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
         /*verificar se quem enviou a mensagem não é um bot*/
-        if(Objects.requireNonNull(event.getMember()).getUser().isBot()){
+        Objects.requireNonNull(event.getMember());
+        if(event.getMember().getUser().isBot()){
             return;
         }
         if(containsCommandOnMessage(event)){
-
             /*fazer a query do comando e enviar o ReceivedInfo para o executor do comando*/
             ReceivedInfo.query(event, receivedInfo -> commands.forEach(cmd -> {
                 if(cmd.accept(receivedInfo)){
@@ -41,7 +41,7 @@ public class CommandManager extends ListenerAdapter {
         }
     }
     /*verificar se ha um comando passado no chat*/
-    private boolean containsCommandOnMessage(MessageReceivedEvent event){
+    public static boolean containsCommandOnMessage(MessageReceivedEvent event){
         return event.getMessage().getContentRaw().startsWith(CommandBase.COMMAND_PREFIX);
     }
 

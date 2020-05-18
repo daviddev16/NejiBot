@@ -1,8 +1,10 @@
 package nejidev.api.commands;
 
+import nejidev.api.NejiAPI;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 public abstract class CommandBase {
@@ -36,8 +38,24 @@ public abstract class CommandBase {
         return info.getReceiverEvent().getTextChannel().sendMessage(builder.build());
     }
 
+    public boolean checkArgs(String[] args, int requiredCount){
+        if(args.length != requiredCount) {
+            return false;
+        }
+        return true;
+    }
+
     public void react(Message message, Emote emote){
         message.addReaction(emote).queue();
+    }
+
+    public static boolean checkPermission(ReceivedInfo ri, long... rolePermissions){
+        for(long roleIds : rolePermissions){
+            if(roleIds == NejiAPI.EVERYONE) return true;
+            Role roleById = NejiAPI.getServerGuild().getRoleById(roleIds);
+            if(ri.getSender().getRoles().contains(roleById)) return true;
+        }
+        return false;
     }
 
 }

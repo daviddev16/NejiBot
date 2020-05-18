@@ -21,7 +21,7 @@ public class AvatarCommand extends CommandBase {
 
     public boolean execute(ReceivedInfo ri) {
 
-        if(ri.getMentions().isEmpty()){
+        if (ri.getMentions().isEmpty()) {
             send(ri, NejiAPI.buildMsg(ri, "Você inseriu o comando errado.", USAGE)).queue(msg -> react(msg, NejiAPI.denied()));
             return false;
         }
@@ -30,7 +30,6 @@ public class AvatarCommand extends CommandBase {
         builder.setImage(mentionedMember.getUser().getAvatarUrl());
         builder.setTitle("Avatar de " + mentionedMember.getUser().getName());
         send(ri, builder).queue(msg -> react(msg, NejiAPI.ok()));
-
         return true;
     }
 }

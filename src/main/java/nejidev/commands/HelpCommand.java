@@ -1,10 +1,13 @@
 package nejidev.commands;
 
+import nejidev.api.commands.miscs.Category;
+import nejidev.api.commands.miscs.CommandCategory;
 import nejidev.api.emotes.EmoteServerType;
 import nejidev.api.NejiAPI;
 import nejidev.api.commands.CommandBase;
 import nejidev.api.commands.ReceivedInfo;
 
+@CommandCategory(category = Category.FUNDAMENTAL)
 public class HelpCommand extends CommandBase {
 
     public HelpCommand(){

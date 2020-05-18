@@ -1,5 +1,7 @@
 package nejidev.commands;
 
+import nejidev.api.commands.miscs.Category;
+import nejidev.api.commands.miscs.CommandCategory;
 import nejidev.api.emotes.EmoteServerType;
 import nejidev.api.NejiAPI;
 import nejidev.api.commands.CommandBase;
@@ -11,6 +13,7 @@ import net.dv8tion.jda.api.entities.Role;
 import java.awt.*;
 import java.util.Objects;
 
+@CommandCategory(category = Category.ADMIN)
 public class MuteCommand extends CommandBase {
 
     public static final MessageEmbed.Field USAGE = new MessageEmbed.Field("Use:", "!mute @<member>", false);

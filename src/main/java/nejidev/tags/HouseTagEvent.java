@@ -12,10 +12,10 @@ import net.dv8tion.jda.api.entities.Message;
 public class HouseTagEvent implements ITagEvent {
 
     public void onTaggedMessageEvent(Message message) {
-
         assert message != null;
         message.addReaction(NejiAPI.getEmote(EmoteServerType.HOUSE_BALANCE)).queue();
         message.addReaction(NejiAPI.getEmote(EmoteServerType.HOUSE_BRILIANCE)).queue();
         message.addReaction(NejiAPI.getEmote(EmoteServerType.HOUSE_BRAVERY)).queue();
+        NejiAPI.sendTagInfo(message);
     }
 }

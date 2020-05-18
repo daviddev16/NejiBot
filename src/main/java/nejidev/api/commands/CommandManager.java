@@ -1,6 +1,7 @@
 package nejidev.api.commands;
 
 import nejidev.api.Bot;
+import nejidev.api.IAttachable;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import javax.annotation.Nonnull;
@@ -11,7 +12,7 @@ import java.util.Objects;
 
 /*Classe responsavel pelo gerenciamento dos comandos no chat,
 * serve para adicionar comandos novos e fazer a pesquisa de comando */
-public class CommandManager extends ListenerAdapter {
+public class CommandManager extends ListenerAdapter implements IAttachable<Bot> {
 
     /*lista de comandos*/
     private final List<CommandBase> commands;

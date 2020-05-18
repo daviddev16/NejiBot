@@ -4,10 +4,10 @@ Como o bot está em desenvolvimento ainda, não possui muitas funcionalidades.
 
 ### Dependências
 
-[JDA](https://mvnrepository.com/artifact/net.dv8tion/JDA)
-[JUnit](https://mvnrepository.com/artifact/junit/junit)
-[Commons Lang3](https://mvnrepository.com/artifact/org.apache.commons/commons-lang3)
-[Shadow](https://mvnrepository.com/artifact/com.github.jengelman.gradle.plugins/shadow)
+| [JDA](https://mvnrepository.com/artifact/net.dv8tion/JDA) |
+[JUnit](https://mvnrepository.com/artifact/junit/junit) |
+[Commons Lang3](https://mvnrepository.com/artifact/org.apache.commons/commons-lang3) |
+[Shadow](https://mvnrepository.com/artifact/com.github.jengelman.gradle.plugins/shadow) |
 
 
 # Links

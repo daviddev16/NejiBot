@@ -1,14 +1,17 @@
 package nejidev.api.commands;
 
 import nejidev.api.NejiAPI;
+import nejidev.api.commands.miscs.Category;
+import nejidev.api.commands.miscs.CommandCategory;
+import nejidev.api.commands.miscs.ICategory;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
 /*classe responsavel por ser a base de todos os comando do bot*/
-public abstract class CommandBase {
+@CommandCategory(category = Category.SERVER)
+public abstract class CommandBase implements ICategory {
 
     /*Prefixo usado pelo usuario para chamar o comando*/
     public static final String COMMAND_PREFIX = "!";
@@ -48,12 +51,7 @@ public abstract class CommandBase {
     }
 
     public static boolean checkPermission(ReceivedInfo ri, long... rolePermissions){
-        for(long roleIds : rolePermissions){
-            if(roleIds == NejiAPI.EVERYONE) return true;
-            Role roleById = NejiAPI.getServerGuild().getRoleById(roleIds);
-            if(ri.getSender().getRoles().contains(roleById)) return true;
-        }
-        return false;
+        return NejiAPI.checkPermission(ri.getSender(), rolePermissions);
     }
 
 }

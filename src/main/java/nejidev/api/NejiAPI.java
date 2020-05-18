@@ -1,6 +1,7 @@
 package nejidev.api;
 
 import nejidev.api.banners.Banner;
+import nejidev.api.utils.Schedule;
 import nejidev.banners.BannerType;
 import nejidev.api.banners.ReactionRole;
 import nejidev.api.commands.CommandBase;
@@ -19,20 +20,22 @@ import org.json.JSONObject;
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.io.*;
+import java.time.Duration;
 import java.util.Objects;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public final class NejiAPI {
 
     /*mestre role id*/
     public static long MESTRE = 707781835215863939L;
-
     /*admin role id*/
     public static long ADMIN = 707784420018618398L;
-
+    /*booster role id*/
+    public static long BOOSTER = 711843254324166689L;
     /*everyone code*/
     public static long EVERYONE = -1L;
-
     /*silenciado role id*/
     public static long SILENCIADO = 711342722937782293L;
 
@@ -224,6 +227,32 @@ public final class NejiAPI {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /*checar permissões do membro*/
+    public static boolean checkPermission(Member member, long... rolePermissions){
+        for(long roleIds : rolePermissions){
+            if(roleIds == EVERYONE) return true;
+            Role roleById = NejiAPI.getServerGuild().getRoleById(roleIds);
+            if(member.getRoles().contains(roleById)) return true;
+        }
+        return false;
+    }
+
+    /*enviar mensagem de novidade quando alguma tag for mencionada*/
+    public static void sendTagInfo(Message tagMsg){
+        MessageEmbed msg = new EmbedBuilder()
+                .setColor(Color.magenta)
+                .setTitle("Tags [Novidade]")
+                .setDescription("Há uma tag na sua mensagem, isto significa que os membros" +
+                        "podem interagir com a sua mensagem !")
+                .build();
+        NejiAPI.sendTemporaryMessage(msg, tagMsg.getTextChannel(), Duration.ofSeconds(5L));
+    }
+
+    /*enviar uma mensagem temporaria.*/
+    public static void sendTemporaryMessage(MessageEmbed embed, TextChannel channel, Duration duration){
+        channel.sendMessage(embed).queue(message -> Schedule.newScheduleEvent(duration, () -> channel.deleteMessageById(message.getIdLong()).queue()));
     }
 
 }

@@ -1,5 +1,7 @@
 package nejidev.commands;
 
+import nejidev.api.commands.miscs.Category;
+import nejidev.api.commands.miscs.CommandCategory;
 import nejidev.api.emotes.EmoteServerType;
 import nejidev.api.NejiAPI;
 import nejidev.api.commands.CommandBase;
@@ -8,6 +10,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
+@CommandCategory(category = Category.FUN)
 public class AvatarCommand extends CommandBase {
 
     public static final MessageEmbed.Field USAGE = new MessageEmbed.Field("Use:", "!avatar <@member>", false);

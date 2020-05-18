@@ -14,5 +14,6 @@ public class FeedbackTagEvent implements ITagEvent  {
         assert message != null;
         message.addReaction(NejiAPI.getEmote(EmoteServerType.YES)).queue();
         message.addReaction(NejiAPI.getEmote(EmoteServerType.NO)).queue();
+        NejiAPI.sendTagInfo(message);
     }
 }

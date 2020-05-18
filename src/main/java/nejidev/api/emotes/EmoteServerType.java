@@ -19,6 +19,9 @@ public enum EmoteServerType {
     HOUSE_BALANCE("balance"),
     HOUSE_BRILIANCE("briliance"),
 
+    /*somethings*/
+    SICKO("sick"),
+
     /*neji emotes*/
     HAPPY("happy");
 

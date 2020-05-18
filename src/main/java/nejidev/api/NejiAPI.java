@@ -16,11 +16,21 @@ import java.awt.*;
 import java.io.*;
 import java.util.Objects;
 import java.util.Random;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 public final class NejiAPI {
 
+
+    /*mestre role id*/
+    public static long MESTRE = 707781835215863939L;
+
+    /*admin role id*/
+    public static long ADMIN = 707784420018618398L;
+
+    /*everyone code*/
+    public static long EVERYONE = -1L;
+
+    /*silenciado role id*/
+    public static long SILENCIADO = 711342722937782293L;
 
     public interface IBotActivity {
 
@@ -102,7 +112,7 @@ public final class NejiAPI {
         return getServerEmote("happy");
     }
 
-    public static EmbedBuilder buildMsg(ReceivedInfo info, String title, String hexadecimalColor, String msg){
+    public static @NotNull EmbedBuilder buildMsg(ReceivedInfo info, String title, String hexadecimalColor, String msg){
         return new EmbedBuilder().setAuthor("Resultados para " + info.getSender().getUser().getName())
                 .setTitle(title)
                 .setDescription(msg)
@@ -111,7 +121,7 @@ public final class NejiAPI {
                 .setFooter("Comando executado pelo "  + getSelfName(), info.getSender().getUser().getAvatarUrl());
     }
 
-    public static EmbedBuilder buildMsg(ReceivedInfo info, String erro, MessageEmbed.Field format) {
+    public static @NotNull EmbedBuilder buildMsg(ReceivedInfo info, String erro, MessageEmbed.Field format) {
 
         EmbedBuilder builder = new EmbedBuilder();
 

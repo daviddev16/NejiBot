@@ -21,7 +21,7 @@ public class ClearTagCommand extends CommandBase {
 
     public boolean execute(ReceivedInfo ri) {
 
-        if(ri.getArguments().length == 1){
+        if(checkArgs(ri.getArguments(), 1)){
 
             if(ri.getArguments()[0].equalsIgnoreCase("pl")) {
 
@@ -35,14 +35,12 @@ public class ClearTagCommand extends CommandBase {
                 send(ri, NejiAPI.buildMsg(ri, "Linguagem de Programação", "#1abc9c", "Você resetou suas linguagens.")).queue(msg -> react(msg, NejiAPI.ok()));
 
             }
-
+            return true;
         }
         else{
-
             send(ri, NejiAPI.buildMsg(ri, "Você inseriu o comando errado.", USAGE)).queue(msg -> react(msg, NejiAPI.denied()));
-
+            return false;
         }
-        return true;
     }
 
 }

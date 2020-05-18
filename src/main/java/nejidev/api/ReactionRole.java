@@ -36,7 +36,9 @@ public class ReactionRole {
     public synchronized AuditableRestAction<Void> addMember(Member member){
         if(!hasTag(member)){
             Guild guild = NejiAPI.getServerGuild();
-            return guild.addRoleToMember(member, Objects.requireNonNull(guild.getRoleById(getRoleId())));
+            Role role = guild.getRoleById(getRoleId());
+            Objects.requireNonNull(role);
+            return guild.addRoleToMember(member, role);
         }
         return null;
     }
@@ -44,7 +46,9 @@ public class ReactionRole {
     public synchronized AuditableRestAction<Void> removeMember(Member member){
         if(hasTag(member)) {
             Guild guild = NejiAPI.getServerGuild();
-            return guild.removeRoleFromMember(member, Objects.requireNonNull(guild.getRoleById(getRoleId())));
+            Role role = guild.getRoleById(getRoleId());
+            Objects.requireNonNull(role);
+            return guild.removeRoleFromMember(member, role);
         }
         return null;
     }

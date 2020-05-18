@@ -1,23 +1,15 @@
 package nejidev.banners;
 
-import nejidev.api.Banner;
+import nejidev.api.banners.Banner;
 import nejidev.api.NejiAPI;
-import nejidev.api.ReactionRole;
-import nejidev.main.NejiBot;
+import nejidev.api.banners.ReactionRole;
 
 public class GameEngineBanner extends Banner {
 
-    /*amanha faço esse banner*/
     public GameEngineBanner(){ super(710057046417997874L);}
 
     public GameEngineBanner(long messageId) {
         super(messageId);
-    }
-
-    public Banner displayBanner() {
-        setBannerPath("/banner_register1.png");
-        super.displayBanner();
-        return this;
     }
 
     public boolean onAwake() {

@@ -1,7 +1,8 @@
-package nejidev.api;
+package nejidev.api.emotes;
 
 import org.jetbrains.annotations.Contract;
 
+/*enum com todos os emotes usados pelo bot para gerar reação*/
 public enum EmoteServerType {
 
     /*custom debug emotes*/
@@ -16,8 +17,12 @@ public enum EmoteServerType {
     /*discord house emotes*/
     HOUSE_BRAVERY("bravery"),
     HOUSE_BALANCE("balance"),
-    HOUSE_BRILIANCE("briliance");
+    HOUSE_BRILIANCE("briliance"),
 
+    /*neji emotes*/
+    HAPPY("happy");
+
+    /*nome do emote na lista de emotes do server*/
     private String name;
 
     @Contract(pure = true)

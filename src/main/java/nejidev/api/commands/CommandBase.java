@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.requests.restaction.MessageAction;
 
+/*classe responsavel por ser a base de todos os comando do bot*/
 public abstract class CommandBase {
 
     /*Prefixo usado pelo usuario para chamar o comando*/
@@ -39,10 +40,7 @@ public abstract class CommandBase {
     }
 
     public boolean checkArgs(String[] args, int requiredCount){
-        if(args.length != requiredCount) {
-            return false;
-        }
-        return true;
+        return args.length == requiredCount;
     }
 
     public void react(Message message, Emote emote){

@@ -1,7 +1,7 @@
-package nejidev.api;
+package nejidev.api.banners;
 
+import nejidev.api.NejiAPI;
 import nejidev.api.utils.Utils;
-import nejidev.main.*;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;

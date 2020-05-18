@@ -1,7 +1,11 @@
 package nejidev.api;
 
+import nejidev.api.banners.Banner;
+import nejidev.banners.BannerType;
+import nejidev.api.banners.ReactionRole;
 import nejidev.api.commands.CommandBase;
 import nejidev.api.commands.ReceivedInfo;
+import nejidev.api.emotes.EmoteServerType;
 import nejidev.api.tag.Tag;
 import nejidev.api.utils.Utils;
 import nejidev.main.MainApplication;
@@ -42,10 +46,13 @@ public final class NejiAPI {
 
     public static final Random random = new Random();
 
+    /*canal de registro do membro*/
     public static final long REGISTER_CHANNEL_ID = 708748306049663067L;
 
+    /*canal de bem-vindas*/
     public static final long WELCOME_CHANNEL_ID = 708726890231365722L;
 
+    /*acessar os banners do servidor*/
     public static Banner getServerBanner(BannerType bannerType){
 
         NejiBot nejiBot = (NejiBot) MainApplication.getBot();
@@ -61,6 +68,7 @@ public final class NejiAPI {
 
     }
 
+    /*pegar um emote do servidor pelo nome*/
     public static Emote getServerEmote(String name){
 
         NejiBot nejiBot = (NejiBot) MainApplication.getBot();
@@ -72,6 +80,7 @@ public final class NejiAPI {
 
     }
 
+    /*acessar um canal de texto pelo id*/
     public static TextChannel getServerTextChannel(long textChannelId){
 
         NejiBot nejiBot = (NejiBot) MainApplication.getBot();
@@ -79,28 +88,35 @@ public final class NejiAPI {
 
     }
 
+    /*retornar a instancia da Guild do servidor vinda do bot*/
     public static Guild getServerGuild(){
-        return ((NejiBot)MainApplication.getBot()).getOfficialGuild();
+        return MainApplication.getBot().getOfficialGuild();
     }
 
+    /*pegar nome do bot ativo*/
     public static String getSelfName(){
         return ((NejiBot)MainApplication.getBot()).getName();
     }
 
+    /*acessar o emote de um ReactionRole*/
     public static Emote getServerEmoteByRole(ReactionRole role){
         return getServerEmote(role.getEmoteName());
     }
 
+    /*registrar um comando no bot*/
     public static void registerCommand(CommandBase command){
         NejiBot.getCommandManager().registerCommand(command);
     }
 
+    /*registrar uma tag no bot*/
     public static void registerTag(Tag tag) { NejiBot.getTagManager().getTags().add(tag); }
 
+    /*pegar um emote pelo tipo dele no servidor*/
     public static Emote getEmote(EmoteServerType type){
         return getServerEmote(type.getEmoteName());
     }
 
+    /*criar uma mensagem personalizada pre-criada.*/
     public static @NotNull EmbedBuilder buildMsg(ReceivedInfo info, String title, String hexadecimalColor, String msg){
         return new EmbedBuilder().setAuthor("Resultados para " + info.getSender().getUser().getName())
                 .setTitle(title)
@@ -110,6 +126,7 @@ public final class NejiAPI {
                 .setFooter("Comando executado pelo "  + getSelfName(), info.getSender().getUser().getAvatarUrl());
     }
 
+    /*criar uma mensagem de erro pre-criada.*/
     public static @NotNull EmbedBuilder buildMsg(ReceivedInfo info, String erro, MessageEmbed.Field format) {
 
         EmbedBuilder builder = new EmbedBuilder();
@@ -126,16 +143,19 @@ public final class NejiAPI {
         return builder;
     }
 
+    /*atualizar a atividade/status de presença do bot*/
     public synchronized static void updateActivity(Activity.ActivityType type, String msg){
         MainApplication.getBot().updateActivity(type, msg);
     }
 
+    /*atualizar a atividade/status de presença do bot*/
     public synchronized static void updateActivity(IBotActivity botActivity){
         MainApplication.getBot().updateActivity(botActivity.getType(), botActivity.getMessage());
     }
 
+    /*ler um arquivo legivel pelo InputStream dele*/
     private static String read(String resourceFile) throws IOException {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
         InputStream in = Utils.getInputStream("/"+ resourceFile);
         Objects.requireNonNull(in);
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -146,11 +166,14 @@ public final class NejiAPI {
         return buffer.toString();
     }
 
+    /*acessar o JSONArray das atividades pre-criadas nas
+    * configurações*/
     private static JSONArray getActivityMessages() throws IOException {
         JSONObject o = new JSONObject(read("config.json"));
         return o.getJSONArray("activities");
     }
 
+    /*validar atividades*/
     private static void validateActivityJSON(JSONObject o){
         if(o == null)
             throw new NullPointerException("JSONObject é nulo.");
@@ -158,6 +181,12 @@ public final class NejiAPI {
             throw new NullPointerException("JSONObject não possui todos os parametros necessarios.");
     }
 
+    /**
+     *
+     * criar thread para gerenciar o status do bot,
+     * atualizando os status a cada 1 min.
+     *
+     */
     public static void setupActivityUpdater() {
         Thread t = new Thread(() -> {
             try {
@@ -174,8 +203,9 @@ public final class NejiAPI {
         t.start();
     }
 
+    /*obter uma mensagem de status aleatoria*/
     @Nullable
-    public synchronized static IBotActivity catchRandomActivity(){
+    private synchronized static IBotActivity catchRandomActivity(){
         try {
             JSONArray activities = getActivityMessages();
             Objects.requireNonNull(activities);

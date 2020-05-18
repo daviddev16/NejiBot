@@ -1,6 +1,6 @@
 package nejidev.main;
 
-import nejidev.api.Bot;
+import nejidev.api.app.Bot;
 import nejidev.api.NejiAPI;
 import nejidev.api.commands.CommandManager;
 import nejidev.api.tag.Tag;

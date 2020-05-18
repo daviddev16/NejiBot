@@ -2,6 +2,7 @@ package nejidev.api;
 
 import nejidev.api.commands.CommandBase;
 import nejidev.api.commands.ReceivedInfo;
+import nejidev.api.tag.Tag;
 import nejidev.api.utils.Utils;
 import nejidev.main.MainApplication;
 import nejidev.main.NejiBot;
@@ -94,6 +95,8 @@ public final class NejiAPI {
     public static void registerCommand(CommandBase command){
         NejiBot.getCommandManager().registerCommand(command);
     }
+
+    public static void registerTag(Tag tag) { NejiBot.getTagManager().getTags().add(tag); }
 
     public static Emote ok(){
         return getServerEmote("ok");

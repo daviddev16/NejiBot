@@ -3,6 +3,7 @@ package nejidev.main;
 import nejidev.api.Bot;
 import nejidev.api.NejiAPI;
 import nejidev.api.commands.CommandManager;
+import nejidev.api.tag.TagManager;
 import nejidev.banners.GameEngineBanner;
 import nejidev.banners.ProgrammingLanguageBanner;
 import nejidev.commands.*;
@@ -13,6 +14,8 @@ public class NejiBot extends Bot {
     public static final String BOT_TOKEN = "token";
 
     private static CommandManager commandManager;
+
+    private static TagManager tagManager;
 
     public ProgrammingLanguageBanner programmingLanguageBanner;
 
@@ -31,6 +34,9 @@ public class NejiBot extends Bot {
         System.out.println("connected.");
 
         getJavaDiscordAPI().addEventListener(new WelcomeListener());
+
+        tagManager = new TagManager();
+        tagManager.attachListener(this);
 
         commandManager = new CommandManager();
         commandManager.attachListener(this);

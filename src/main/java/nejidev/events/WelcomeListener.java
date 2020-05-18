@@ -15,10 +15,6 @@ public class WelcomeListener extends ListenerAdapter {
     /*enviar banner quando membro entrar no servidor*/
     public void onGuildMemberJoin(@Nonnull GuildMemberJoinEvent event) {
 
-        if(event.getUser().isBot()){
-            return;
-        }
-
         Role playerRole = NejiAPI.getServerGuild().getRoleById(707783643459878923L);
         NejiAPI.getServerGuild().addRoleToMember(event.getMember(), playerRole).queue();
 

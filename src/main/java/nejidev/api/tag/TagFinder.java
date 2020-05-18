@@ -7,7 +7,7 @@ import org.w3c.dom.events.EventException;
 
 import java.util.function.Supplier;
 
-class TagFinder {
+final class TagFinder {
 
     private boolean isValid;
     private boolean isClosed;
@@ -72,19 +72,16 @@ class TagFinder {
             }
             currentIndex++;
         }
-        if(tagFinder.isValid()){
+        if(!tagFinder.isValid()){
             return;
         }
         try {
             tagManager.getTags()
                     .stream()
-                    .filter(tag1 -> tag1.getKey().equals(tagFinder.getResultKey()))
+                    .filter(tag1 -> tag1.getKey().equalsIgnoreCase(tagFinder.getResultKey()))
                     .findFirst()
                     .orElseThrow(() -> new EventException((short)-1, "Não foi possivel localizar a tag."))
-                    .getEmotes()
-                    .forEach(emote -> {
-                        message.addReaction(emote).queue();
-                    });
+                    .callEvent(message);
         }catch (Exception e){
             e.printStackTrace();
         }

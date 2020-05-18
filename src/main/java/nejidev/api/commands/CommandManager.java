@@ -1,7 +1,7 @@
 package nejidev.api.commands;
 
 import nejidev.api.Bot;
-import nejidev.api.IAttachable;
+import nejidev.api.listeners.IAttachable;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import javax.annotation.Nonnull;
@@ -32,7 +32,6 @@ public class CommandManager extends ListenerAdapter implements IAttachable<Bot> 
             /*fazer a query do comando e enviar o ReceivedInfo para o executor do comando*/
             ReceivedInfo.query(event, receivedInfo -> commands.forEach(cmd -> {
                 if(cmd.accept(receivedInfo)){
-
                     /*executar comando assim que for achado pela query*/
                     if(cmd.execute(receivedInfo)) {
                         event.getTextChannel().deleteMessageById(event.getMessageId()).delay(Duration.ofSeconds(1L)).queue();

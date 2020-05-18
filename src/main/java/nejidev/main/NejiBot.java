@@ -5,6 +5,7 @@ import nejidev.api.NejiAPI;
 import nejidev.api.commands.CommandManager;
 import nejidev.api.tag.Tag;
 import nejidev.api.tag.TagManager;
+import nejidev.tags.FeedbackTagEvent;
 import nejidev.banners.GameEngineBanner;
 import nejidev.banners.ProgrammingLanguageBanner;
 import nejidev.commands.*;
@@ -12,7 +13,7 @@ import nejidev.events.WelcomeListener;
 
 public class NejiBot extends Bot {
 
-    public static final String BOT_TOKEN = "NzA3Nzg2MzUzOTQwNjI3NDY2.Xr8pcQ.zpBy-15XIDXuOTZ5WcY65htO23M";
+    public static final String BOT_TOKEN = "<bot token>";
 
     private static CommandManager commandManager;
 
@@ -55,7 +56,7 @@ public class NejiBot extends Bot {
         NejiAPI.registerCommand(new MuteCommand());
         NejiAPI.registerCommand(new DesmuteCommand());
 
-        NejiAPI.registerTag(Tag.createTag("feedback", NejiAPI.ok(), NejiAPI.warning(), NejiAPI.denied()));
+        NejiAPI.registerTag(Tag.createTag("feedback", FeedbackTagEvent::new));
 
         NejiAPI.setupActivityUpdater();
     }

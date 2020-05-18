@@ -1,5 +1,6 @@
 package nejidev.commands;
 
+import nejidev.api.EmoteServerType;
 import nejidev.api.NejiAPI;
 import nejidev.api.commands.CommandBase;
 import nejidev.api.commands.ReceivedInfo;
@@ -22,14 +23,14 @@ public class AvatarCommand extends CommandBase {
     public boolean execute(ReceivedInfo ri) {
 
         if (ri.getMentions().isEmpty()) {
-            send(ri, NejiAPI.buildMsg(ri, "Você inseriu o comando errado.", USAGE)).queue(msg -> react(msg, NejiAPI.denied()));
+            send(ri, NejiAPI.buildMsg(ri, "Você inseriu o comando errado.", USAGE)).queue(msg -> react(msg, NejiAPI.getEmote(EmoteServerType.DENIED)));
             return false;
         }
         Member mentionedMember = ri.getMentions().get(0);
         EmbedBuilder builder = new EmbedBuilder();
         builder.setImage(mentionedMember.getUser().getAvatarUrl());
         builder.setTitle("Avatar de " + mentionedMember.getUser().getName());
-        send(ri, builder).queue(msg -> react(msg, NejiAPI.ok()));
+        send(ri, builder).queue(msg -> react(msg, NejiAPI.getEmote(EmoteServerType.OK)));
         return true;
     }
 }

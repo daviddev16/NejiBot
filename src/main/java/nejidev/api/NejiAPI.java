@@ -20,7 +20,6 @@ import java.util.Random;
 
 public final class NejiAPI {
 
-
     /*mestre role id*/
     public static long MESTRE = 707781835215863939L;
 
@@ -98,21 +97,8 @@ public final class NejiAPI {
 
     public static void registerTag(Tag tag) { NejiBot.getTagManager().getTags().add(tag); }
 
-    public static Emote ok(){
-        return getServerEmote("ok");
-    }
-
-    public static Emote warning(){
-        return getServerEmote("warning");
-    }
-
-    public static Emote denied(){
-        return getServerEmote("denied");
-    }
-
-    /*emote "happy" de dentro do servidor*/
-    public static Emote happy(){
-        return getServerEmote("happy");
+    public static Emote getEmote(EmoteServerType type){
+        return getServerEmote(type.getEmoteName());
     }
 
     public static @NotNull EmbedBuilder buildMsg(ReceivedInfo info, String title, String hexadecimalColor, String msg){

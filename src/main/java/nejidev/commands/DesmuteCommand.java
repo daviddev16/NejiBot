@@ -1,5 +1,6 @@
 package nejidev.commands;
 
+import nejidev.api.EmoteServerType;
 import nejidev.api.NejiAPI;
 import nejidev.api.commands.CommandBase;
 import nejidev.api.commands.ReceivedInfo;
@@ -37,12 +38,12 @@ public class DesmuteCommand extends CommandBase {
             builder.setThumbnail(ri.getSender().getUser().getAvatarUrl());
             builder.setColor(Color.decode("#AA00AA"));
             builder.setFooter("Comando executado pelo "  + NejiAPI.getSelfName(), ri.getSender().getUser().getAvatarUrl());
-            send(ri, builder).queue(msg -> react(msg, NejiAPI.ok()));
+            send(ri, builder).queue(msg -> react(msg, NejiAPI.getEmote(EmoteServerType.OK)));
 
             return true;
 
         }else{
-            send(ri, NejiAPI.buildMsg(ri, "Você inseriu o comando errado.", USAGE)).queue(msg -> react(msg, NejiAPI.denied()));
+            send(ri, NejiAPI.buildMsg(ri, "Você inseriu o comando errado.", USAGE)).queue(msg -> react(msg, NejiAPI.getEmote(EmoteServerType.DENIED)));
             return false;
         }
     }

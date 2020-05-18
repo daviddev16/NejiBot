@@ -71,9 +71,8 @@ public abstract class Banner extends ListenerAdapter {
 
         for(ReactionRole roles : getReactionRoles()){
 
-            channel.removeReactionById(messageId, Utils.findEmoteByName(roles.getEmoteName()), member.getUser()).queue();
+            channel.removeReactionById(messageId, NejiAPI.getServerEmote(roles.getEmoteName()), member.getUser()).queue();
             AuditableRestAction<Void> action = roles.removeMember(member);
-
             if(action != null) {
                 action.queue();
             }

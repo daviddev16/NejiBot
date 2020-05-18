@@ -1,41 +1,31 @@
 package nejidev.api.tag;
 
-import net.dv8tion.jda.api.entities.Emote;
+import nejidev.api.listeners.ITagEvent;
+import net.dv8tion.jda.api.entities.Message;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.function.Supplier;
 
 public class Tag {
 
-    private String key;
-    private List<Emote> emotes;
+    private final String key;
+    private final ITagEvent event;
 
-    public Tag(String key, List<Emote> emotes) {
+    public Tag(String key, ITagEvent event) {
         this.key = key;
-        this.emotes = emotes;
-    }
-
-    public List<Emote> getEmotes() {
-        return emotes;
-    }
-
-    public void setEmotes(List<Emote> emotes) {
-        this.emotes = emotes;
+        this.event = event;
     }
 
     public String getKey() {
         return key;
     }
 
-    public void setKey(String key) {
-        this.key = key;
-    }
+    public void callEvent(Message message) { event.onTaggedMessageEvent(message); }
 
-    public static Tag createTag(String key, Emote... emotes){
-        List<Emote> emoteList = new ArrayList<>();
-        for (Emote emote : emotes) {
-            emoteList.add(emote);
+    public static Tag createTag(String key, Supplier<ITagEvent> event){
+        ITagEvent tagEvent = event.get();
+        if(tagEvent == null){
+            tagEvent = new EmptyTagEvent();
         }
-        return new Tag(key, emoteList);
+        return new Tag(key, tagEvent);
     }
 }

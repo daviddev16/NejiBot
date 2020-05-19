@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/daviddev16/NejiBot/tree/master.svg?style=svg&circle-token=6c7de018ddb3be4f68a066d40c6d5d465b8d8fea)](https://circleci.com/gh/daviddev16/NejiBot/tree/master)
+
 # NejiBot
 Este bot é dedicado somente para o meu servidor, porem deixarei o respositorio dele sempre atualizado aqui para quem quiser da uma olhada.
 Como o bot está em desenvolvimento ainda, não possui muitas funcionalidades.

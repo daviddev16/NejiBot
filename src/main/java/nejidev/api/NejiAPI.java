@@ -28,16 +28,26 @@ import java.util.TimerTask;
 
 public final class NejiAPI {
 
-    /*mestre role id*/
-    public static long MESTRE = 707781835215863939L;
-    /*admin role id*/
-    public static long ADMIN = 707784420018618398L;
-    /*booster role id*/
-    public static long BOOSTER = 711843254324166689L;
-    /*everyone code*/
-    public static long EVERYONE = -1L;
-    /*silenciado role id*/
-    public static long SILENCIADO = 711342722937782293L;
+    public static final class Permissions {
+
+        /*roles*/
+        public static long MESTRE = 707781835215863939L;
+        public static long ADMIN = 707784420018618398L;
+        public static long BOOSTER = 711843254324166689L;
+        public static long EVERYONE = -1L;
+        public static long SILENCIADO = 711342722937782293L;
+
+
+        public static boolean checkMasterPermissions(Member member){
+            return NejiAPI.checkPermission(member, ADMIN, MESTRE);
+        }
+
+        public static boolean checkTagPermissions(Member member){
+            return NejiAPI.checkPermission(member, ADMIN, MESTRE, BOOSTER);
+        }
+
+
+    }
 
     public interface IBotActivity {
 
@@ -157,7 +167,7 @@ public final class NejiAPI {
     }
 
     /*ler um arquivo legivel pelo InputStream dele*/
-    private static String read(String resourceFile) throws IOException {
+    public static String read(String resourceFile) throws IOException {
         StringBuilder buffer = new StringBuilder();
         InputStream in = Utils.getInputStream("/"+ resourceFile);
         Objects.requireNonNull(in);
@@ -232,7 +242,7 @@ public final class NejiAPI {
     /*checar permissões do membro*/
     public static boolean checkPermission(Member member, long... rolePermissions){
         for(long roleIds : rolePermissions){
-            if(roleIds == EVERYONE) return true;
+            if(roleIds == Permissions.EVERYONE) return true;
             Role roleById = NejiAPI.getServerGuild().getRoleById(roleIds);
             if(member.getRoles().contains(roleById)) return true;
         }
@@ -253,6 +263,16 @@ public final class NejiAPI {
     /*enviar uma mensagem temporaria.*/
     public static void sendTemporaryMessage(MessageEmbed embed, TextChannel channel, Duration duration){
         channel.sendMessage(embed).queue(message -> Schedule.newScheduleEvent(duration, () -> channel.deleteMessageById(message.getIdLong()).queue()));
+    }
+
+    @Nullable
+    public static Member findMember(String userId){
+        for(Member members : MainApplication.getBot().getOfficialGuild().getMembers()){
+            if(members.getUser().getId().equalsIgnoreCase(userId)){
+                return members;
+            }
+        }
+        return null;
     }
 
 }

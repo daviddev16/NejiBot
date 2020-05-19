@@ -4,12 +4,14 @@ import nejidev.api.NejiAPI;
 import nejidev.api.utils.Utils;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.Objects.*;
 
@@ -103,6 +105,24 @@ public abstract class Banner extends ListenerAdapter {
         }
     }
 
+    @Override
+    public void onMessageReactionRemove(@Nonnull MessageReactionRemoveEvent event) {
+        Emote emote = event.getReactionEmote().getEmote();
+        Member member = NejiAPI.findMember(event.getUserId());
+        Objects.requireNonNull(member);
+        if (requireNonNull(member.getUser()).isBot()) {
+            return;
+        }
+        if ((event.getChannel().getIdLong() == getTextChannelId()) &&
+                event.getMessageId().equalsIgnoreCase(Long.toString(getMessageId()))) {
+
+            ReactionRole foundRole = findReactionRole(emote);
+            requireNonNull(foundRole);
+            removeMemberToReactionRole(foundRole, member);
+        }
+
+    }
+
     /*adicionar role ao jogador*/
     private void addMemberToReactionRole(ReactionRole role, Member member){
         AuditableRestAction<Void>  action = role.addMember(member);
@@ -110,6 +130,15 @@ public abstract class Banner extends ListenerAdapter {
             action.queue();
         }
     }
+
+    /*remover role ao jogador*/
+    private void removeMemberToReactionRole(ReactionRole role, Member member){
+        AuditableRestAction<Void>  action = role.removeMember(member);
+        if(action != null) {
+            action.queue();
+        }
+    }
+
 
     /*adicionar role por reação*/
     public void addReactionRoles(ReactionRole reactionRole){

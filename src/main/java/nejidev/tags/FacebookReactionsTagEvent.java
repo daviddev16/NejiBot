@@ -7,11 +7,13 @@ import javax.annotation.Nullable;
 
 
 /*Facebook reactions tag event*/
-public class FBReactionsTagEvent implements ITagEvent {
+public class FacebookReactionsTagEvent implements ITagEvent {
 
     public void onTaggedMessageEvent(@Nullable Message message) {
-
         assert message != null;
+
+        if(!NejiAPI.Permissions.checkTagPermissions(message.getMember())) return;
+
         message.addReaction("U+1F44D").queue();
         message.addReaction("U+2764").queue();
         message.addReaction("U+1F602").queue();

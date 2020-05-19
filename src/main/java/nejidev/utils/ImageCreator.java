@@ -45,6 +45,7 @@ public class ImageCreator {
 
         /*mostrar avatar*/
         graphics.drawImage(userImage, (512 - (128+gap)), gap, null);
+        graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         graphics.dispose();
         return Utils.convertImage(background);
     }

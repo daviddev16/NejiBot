@@ -29,11 +29,11 @@ public class DesmuteCommand extends CommandBase {
     @Override
     public boolean execute(ReceivedInfo ri) {
 
-        if(!checkPermission(ri, NejiAPI.MESTRE, NejiAPI.ADMIN)) return false;
+        if(!NejiAPI.Permissions.checkMasterPermissions(ri.getSender())) return false;
 
         if(checkArgs(ri.getArguments(), 1)) {
 
-            Role roleSilenciado = NejiAPI.getServerGuild().getRoleById(NejiAPI.SILENCIADO);
+            Role roleSilenciado = NejiAPI.getServerGuild().getRoleById(NejiAPI.Permissions.SILENCIADO);
             Objects.requireNonNull(roleSilenciado);
             NejiAPI.getServerGuild().removeRoleFromMember(ri.getMentions().get(0), roleSilenciado).queue();
 

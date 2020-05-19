@@ -10,8 +10,9 @@ import javax.annotation.Nullable;
 public class ModeTagEvent implements ITagEvent {
 
     public void onTaggedMessageEvent(@Nullable Message message) {
-
         assert message != null;
+
+        if(!NejiAPI.Permissions.checkTagPermissions(message.getMember())) return;
 
         message.addReaction(NejiAPI.getEmote(EmoteServerType.OK)).queue();
         message.addReaction(NejiAPI.getEmote(EmoteServerType.WARNING)).queue();

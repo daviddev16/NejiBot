@@ -13,6 +13,9 @@ public class HouseTagEvent implements ITagEvent {
 
     public void onTaggedMessageEvent(Message message) {
         assert message != null;
+
+        if(!NejiAPI.Permissions.checkTagPermissions(message.getMember())) return;
+
         message.addReaction(NejiAPI.getEmote(EmoteServerType.HOUSE_BALANCE)).queue();
         message.addReaction(NejiAPI.getEmote(EmoteServerType.HOUSE_BRILIANCE)).queue();
         message.addReaction(NejiAPI.getEmote(EmoteServerType.HOUSE_BRAVERY)).queue();

@@ -2,6 +2,7 @@ package nejidev.main;
 
 import nejidev.api.app.Bot;
 import javax.security.auth.login.LoginException;
+import java.io.IOException;
 
 public class MainApplication {
 
@@ -11,7 +12,7 @@ public class MainApplication {
     /*singleton of bot*/
     private static Bot bot;
 
-    public static void main(String[] args) throws LoginException, InterruptedException {
+    public static void main(String[] args) throws LoginException, IOException {
         bot = new NejiBot().load(SERVER_ID);
     }
 

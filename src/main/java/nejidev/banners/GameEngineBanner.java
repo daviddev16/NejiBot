@@ -3,6 +3,10 @@ package nejidev.banners;
 import nejidev.api.banners.Banner;
 import nejidev.api.NejiAPI;
 import nejidev.api.banners.ReactionRole;
+import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
+
+import javax.annotation.Nonnull;
 
 public class GameEngineBanner extends Banner {
 

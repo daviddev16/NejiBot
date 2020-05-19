@@ -5,7 +5,8 @@ import nejidev.api.NejiAPI;
 import nejidev.api.commands.CommandManager;
 import nejidev.api.tag.Tag;
 import nejidev.api.tag.TagManager;
-import nejidev.tags.FBReactionsTagEvent;
+import nejidev.api.utils.Utils;
+import nejidev.tags.FacebookReactionsTagEvent;
 import nejidev.tags.FeedbackTagEvent;
 import nejidev.banners.GameEngineBanner;
 import nejidev.banners.ProgrammingLanguageBanner;
@@ -15,11 +16,9 @@ import nejidev.tags.HouseTagEvent;
 import nejidev.tags.ModeTagEvent;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
 
 public class NejiBot extends Bot {
-
-    @Nullable
-    public static final String BOT_TOKEN = "token";
 
     private static CommandManager commandManager;
 
@@ -29,10 +28,9 @@ public class NejiBot extends Bot {
 
     public GameEngineBanner gameEngineBanner;
 
-    public NejiBot(){
-        super(BOT_TOKEN);
+    public NejiBot() throws IOException {
+        super(NejiAPI.read(".token").trim());
     }
-
     private NejiBot(String token) {
         super(token);
     }
@@ -64,7 +62,7 @@ public class NejiBot extends Bot {
 
         NejiAPI.registerTag(Tag.createTag("feedback", FeedbackTagEvent::new));
         NejiAPI.registerTag(Tag.createTag("houses", HouseTagEvent::new));
-        NejiAPI.registerTag(Tag.createTag("reactions", FBReactionsTagEvent::new));
+        NejiAPI.registerTag(Tag.createTag("reactions", FacebookReactionsTagEvent::new));
         NejiAPI.registerTag(Tag.createTag("pass", ModeTagEvent::new));
 
         NejiAPI.setupActivityUpdater();

@@ -45,4 +45,8 @@ public class Tag {
         }
         return new Tag(key, tagEvent);
     }
+
+    public boolean isMine(TagToken token){
+        return getKey().equalsIgnoreCase(token.getResultKey());
+    }
 }

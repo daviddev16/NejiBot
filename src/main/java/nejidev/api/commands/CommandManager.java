@@ -24,6 +24,9 @@ public class CommandManager extends ListenerAdapter implements IAttachable<Bot> 
     @Override
     public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
         /*verificar se quem enviou a mensagem não é um bot*/
+
+        if(!event.isFromGuild())return;
+
         Objects.requireNonNull(event.getMember());
         if(event.getMember().getUser().isBot()){
             return;
@@ -31,12 +34,16 @@ public class CommandManager extends ListenerAdapter implements IAttachable<Bot> 
         if(containsCommandOnMessage(event)){
             /*fazer a query do comando e enviar o ReceivedInfo para o executor do comando*/
             ReceivedInfo.query(event, receivedInfo -> commands.forEach(cmd -> {
+
                 if(cmd.accept(receivedInfo)){
                     /*executar comando assim que for achado pela query*/
                     if(cmd.execute(receivedInfo)) {
+
                         event.getTextChannel().deleteMessageById(event.getMessageId()).delay(Duration.ofSeconds(1L)).queue();
+
                     }
                 }
+
             }));
         }
     }

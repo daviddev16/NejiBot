@@ -31,13 +31,13 @@ public class ImageCreator {
         graphics.fillRoundRect(0, 0, WIDTH, HEIGHT, 2, 2);
 
         /*textos*/
-        graphics.setColor(dominantColor.darker().darker());
+        graphics.setColor(Color.black);
         graphics.setFont(new Font("Segoe UI", Font.BOLD, 32));
-        graphics.drawString("BEM VINDO", gap, gap + 32);
+        graphics.drawString("Seja Bem-Vindo", gap, gap + 32);
 
         /*username*/
         graphics.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        graphics.drawString(user.getName() + " !", gap, gap + 32+23);
+        graphics.drawString(user.getName().toUpperCase(), gap, gap + 32+30);
 
         /*simbolo happy*/
         BufferedImage happy = ImageUtils.createBufferedImage(Utils.openImage(NejiAPI.getEmote(EmoteServerType.HAPPY).getImageUrl()).getScaledInstance(32, 54, Image.SCALE_SMOOTH));

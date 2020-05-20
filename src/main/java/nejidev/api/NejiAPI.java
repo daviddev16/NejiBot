@@ -65,6 +65,9 @@ public final class NejiAPI {
     /*canal de bem-vindas*/
     public static final long WELCOME_CHANNEL_ID = 708726890231365722L;
 
+    /*canal de issues*/
+    public static final long ISSUE_CHANNEL_ID = 709283806925815908L;
+
     /*acessar os banners do servidor*/
     public static Banner getServerBanner(BannerType bannerType){
 
@@ -264,6 +267,17 @@ public final class NejiAPI {
     public static void sendTemporaryMessage(MessageEmbed embed, TextChannel channel, Duration duration){
         channel.sendMessage(embed).queue(message -> Schedule.newScheduleEvent(duration, () -> channel.deleteMessageById(message.getIdLong()).queue()));
     }
+
+    public static Message findIssue(String id){
+        TextChannel issueChannel = getServerGuild().getTextChannelById(ISSUE_CHANNEL_ID);
+        Objects.requireNonNull(issueChannel);
+        return issueChannel.retrieveMessageById(id).complete();
+    }
+
+    public static void quickReact(Message message, Emote emote){
+        message.addReaction(emote).queue();
+    }
+
 
     @Nullable
     public static Member findMember(String userId){

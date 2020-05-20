@@ -29,19 +29,19 @@ public class ClearTagCommand extends CommandBase {
             if(ri.getArguments()[0].equalsIgnoreCase("pl")) {
 
                 NejiAPI.getServerBanner(BannerType.PROGRAMMING_LANGUAGE).clearMember(ri.getSender());
-                send(ri, NejiAPI.buildMsg(ri, "Linguagem de Programação", "#33CC66", "Você resetou suas linguagens.")).queue(msg -> react(msg, NejiAPI.getEmote(EmoteServerType.OK)));
+                sendSuccess(ri, "Linguagem de Programação", "#33CC66", "Você resetou suas linguagens.");
 
             }
             else if(ri.getArguments()[0].equalsIgnoreCase("ge")){
 
                 NejiAPI.getServerBanner(BannerType.GAME_ENGINE).clearMember(ri.getSender());
-                send(ri, NejiAPI.buildMsg(ri, "Linguagem de Programação", "#1abc9c", "Você resetou suas linguagens.")).queue(msg -> react(msg, NejiAPI.getEmote(EmoteServerType.OK)));
+                sendSuccess(ri, "Game Engine", "#1abc9c", "Você resetou suas engines.");
 
             }
             return true;
         }
         else{
-            send(ri, NejiAPI.buildMsg(ri, "Você inseriu o comando errado.", USAGE)).queue(msg -> react(msg, NejiAPI.getEmote(EmoteServerType.DENIED)));
+            sendError(ri, USAGE);
             return false;
         }
     }

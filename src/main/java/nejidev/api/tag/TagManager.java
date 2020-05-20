@@ -21,8 +21,9 @@ public class TagManager extends ListenerAdapter implements IAttachable<Bot> {
         if (CommandManager.containsCommandOnMessage(event)) {
             return;
         }
-        if (TagFinder.containsTag(event.getMessage())) {
-            TagFinder.compile(this, event, TagFinder::new, event.getMessage());
+
+        if (TagToken.containsTag(event.getMessage())) {
+            TagToken.compile(getTags(), event.getMessage());
         }
     }
 

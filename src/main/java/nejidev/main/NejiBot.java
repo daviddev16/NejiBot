@@ -5,17 +5,13 @@ import nejidev.api.NejiAPI;
 import nejidev.api.commands.CommandManager;
 import nejidev.api.tag.Tag;
 import nejidev.api.tag.TagManager;
-import nejidev.api.utils.Utils;
-import nejidev.tags.FacebookReactionsTagEvent;
-import nejidev.tags.FeedbackTagEvent;
+import nejidev.tags.*;
 import nejidev.banners.GameEngineBanner;
 import nejidev.banners.ProgrammingLanguageBanner;
 import nejidev.commands.*;
 import nejidev.events.WelcomeListener;
-import nejidev.tags.HouseTagEvent;
-import nejidev.tags.ModeTagEvent;
+import nejidev.tags.issues.OpenIssueTagEvent;
 
-import javax.annotation.Nullable;
 import java.io.IOException;
 
 public class NejiBot extends Bot {
@@ -37,8 +33,6 @@ public class NejiBot extends Bot {
 
     public void onConnected() {
 
-        System.out.println("connected.");
-
         getJavaDiscordAPI().addEventListener(new WelcomeListener());
 
         tagManager = new TagManager();
@@ -53,19 +47,31 @@ public class NejiBot extends Bot {
         gameEngineBanner = new GameEngineBanner();
         addBanner(gameEngineBanner);
 
+        registerCommands();
+        registerTags();
+
+        NejiAPI.setupActivityUpdater();
+
+    }
+
+    public void registerCommands(){
         NejiAPI.registerCommand(new ClearTagCommand());
         NejiAPI.registerCommand(new HelpCommand());
         NejiAPI.registerCommand(new CountCommand());
         NejiAPI.registerCommand(new AvatarCommand());
         NejiAPI.registerCommand(new MuteCommand());
         NejiAPI.registerCommand(new DesmuteCommand());
+        NejiAPI.registerCommand(new CloseIssueCommand());
+    }
 
+    public void registerTags(){
         NejiAPI.registerTag(Tag.createTag("feedback", FeedbackTagEvent::new));
         NejiAPI.registerTag(Tag.createTag("houses", HouseTagEvent::new));
         NejiAPI.registerTag(Tag.createTag("reactions", FacebookReactionsTagEvent::new));
         NejiAPI.registerTag(Tag.createTag("pass", ModeTagEvent::new));
+        NejiAPI.registerTag(Tag.createTag("sicko", SickoTagEvent::new));
+        NejiAPI.registerTag(Tag.createTag("issue", OpenIssueTagEvent::new));
 
-        NejiAPI.setupActivityUpdater();
     }
 
     public String getName(){

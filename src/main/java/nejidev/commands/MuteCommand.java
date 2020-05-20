@@ -7,6 +7,7 @@ import nejidev.api.NejiAPI;
 import nejidev.api.commands.CommandBase;
 import nejidev.api.commands.ReceivedInfo;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 
@@ -29,26 +30,28 @@ public class MuteCommand extends CommandBase {
     @Override
     public boolean execute(ReceivedInfo ri) {
 
-        if(!NejiAPI.Permissions.checkMasterPermissions(ri.getSender())) return false;
+        if (!NejiAPI.Permissions.checkMasterPermissions(ri.getSender())) return false;
 
-        if(checkArgs(ri.getArguments(), 1)) {
-
-            Role roleSilenciado = NejiAPI.getServerGuild().getRoleById(NejiAPI.Permissions.SILENCIADO);
-            Objects.requireNonNull(roleSilenciado);
-            NejiAPI.getServerGuild().addRoleToMember(ri.getMentions().get(0), roleSilenciado).queue();
-
-            /*message*/
-            EmbedBuilder builder = new EmbedBuilder();
-            builder.setTitle("Usuario Punido por " + ri.getSender().getUser().getName());
-            builder.setDescription("O usuario " + ri.getMentions().get(0).getUser().getName() + " foi silenciado de falar no chat.");
-            builder.setThumbnail(ri.getSender().getUser().getAvatarUrl());
-            builder.setColor(Color.decode("#FFAA00"));
-            builder.setFooter("Comando executado pelo "  + NejiAPI.getSelfName(), ri.getSender().getUser().getAvatarUrl());
-            send(ri, builder).queue(msg -> react(msg, NejiAPI.getEmote(EmoteServerType.OK)));
-            return true;
-        }else{
-            send(ri, NejiAPI.buildMsg(ri, "Você inseriu o comando errado.", USAGE)).queue(msg -> react(msg, NejiAPI.getEmote(EmoteServerType.DENIED)));
+        if (ri.getMentions().isEmpty()) {
+            sendError(ri, USAGE);
             return false;
         }
+        Member mentionedMember = ri.getMentions().get(0);
+
+        Role roleSilenciado = NejiAPI.getServerGuild().getRoleById(NejiAPI.Permissions.SILENCIADO);
+        Objects.requireNonNull(roleSilenciado);
+        NejiAPI.getServerGuild().addRoleToMember(mentionedMember, roleSilenciado).queue();
+
+
+        /*message*/
+        EmbedBuilder builder = new EmbedBuilder()
+                .setTitle("Usuario Punido por " + ri.getSender().getUser().getName())
+                .setDescription("O usuario " + mentionedMember.getUser().getName() + " foi silenciado de falar no chat.")
+                .setThumbnail(ri.getSender().getUser().getAvatarUrl())
+                .setColor(Color.decode("#FFAA00"))
+                .setFooter("Comando executado pelo " + NejiAPI.getSelfName(), ri.getSender().getUser().getAvatarUrl());
+
+        sendEmbed(ri, builder).queue(msg -> NejiAPI.quickReact(msg, NejiAPI.getEmote(EmoteServerType.OK)));
+        return true;
     }
 }

@@ -5,18 +5,22 @@ import nejidev.api.emotes.EmoteServerType;
 import nejidev.api.listeners.ITagEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
+
 import javax.annotation.Nullable;
 import java.awt.*;
 import java.time.Duration;
 import java.util.Objects;
 
 public class OpenIssueTagEvent implements ITagEvent {
+
     public static String issueIconURL = "https://i.imgur.com/Vv1Q4Zl.png";
 
     @Override
     public void onTaggedMessageEvent(@Nullable Message message) {
 
         assert message != null;
+
+        if(!NejiAPI.Permissions.checkIssuesPermission(message.getMember())) return;
 
         if(message.getTextChannel().getIdLong() != NejiAPI.ISSUE_CHANNEL_ID){
             NejiAPI.sendTemporaryMessage(
@@ -57,6 +61,7 @@ public class OpenIssueTagEvent implements ITagEvent {
 
         ).queue(msg -> msg.addReaction(NejiAPI.getEmote(EmoteServerType.OK)).queue()));
         message.addReaction(NejiAPI.getEmote(EmoteServerType.OPENED)).queue();
+
 
 
     }

@@ -5,13 +5,12 @@ import nejidev.api.commands.CommandBase;
 import nejidev.api.commands.ReceivedInfo;
 import nejidev.api.commands.miscs.Category;
 import nejidev.api.commands.miscs.CommandCategory;
+import nejidev.api.database.NejiDatabase;
 import nejidev.api.emotes.EmoteServerType;
-import nejidev.banners.BannerType;
 import nejidev.tags.issues.OpenIssueTagEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.MessageReaction;
 
 import java.awt.*;
 import java.time.Duration;
@@ -61,6 +60,9 @@ public class CloseIssueCommand extends CommandBase {
 
             issueMessage.removeReaction(NejiAPI.getEmote(EmoteServerType.OPENED)).queue();
             issueMessage.addReaction(NejiAPI.getEmote(EmoteServerType.CLOSED)).queue();
+
+            Objects.requireNonNull(ri.getSender());
+            NejiDatabase.addIssue(ri.getSender());
 
             return true;
         }

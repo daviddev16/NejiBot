@@ -1,15 +1,15 @@
 package nejidev.main;
 
-import nejidev.api.app.Bot;
 import nejidev.api.NejiAPI;
+import nejidev.api.app.Bot;
 import nejidev.api.commands.CommandManager;
 import nejidev.api.tag.Tag;
 import nejidev.api.tag.TagManager;
-import nejidev.tags.*;
 import nejidev.banners.GameEngineBanner;
 import nejidev.banners.ProgrammingLanguageBanner;
 import nejidev.commands.*;
 import nejidev.events.WelcomeListener;
+import nejidev.tags.*;
 import nejidev.tags.issues.OpenIssueTagEvent;
 
 import java.io.IOException;
@@ -62,6 +62,7 @@ public class NejiBot extends Bot {
         NejiAPI.registerCommand(new MuteCommand());
         NejiAPI.registerCommand(new DesmuteCommand());
         NejiAPI.registerCommand(new CloseIssueCommand());
+        NejiAPI.registerCommand(new RankCommand());
     }
 
     public void registerTags(){
@@ -71,6 +72,7 @@ public class NejiBot extends Bot {
         NejiAPI.registerTag(Tag.createTag("pass", ModeTagEvent::new));
         NejiAPI.registerTag(Tag.createTag("sicko", SickoTagEvent::new));
         NejiAPI.registerTag(Tag.createTag("issue", OpenIssueTagEvent::new));
+        NejiAPI.registerTag(Tag.createTag("vote", VoteTagEvent::new));
 
     }
 

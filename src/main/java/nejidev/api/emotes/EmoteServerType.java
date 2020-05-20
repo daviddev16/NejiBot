@@ -27,11 +27,15 @@ public enum EmoteServerType {
 
     /*issue tag emotes*/
     CLOSED("closed"),
-    OPENED("open");
+    OPENED("open"),
+
+    /*voting emotes*/
+    UP_VOTE("upvote"),
+    DOWN_VOTE("downvote");
 
 
     /*nome do emote na lista de emotes do server*/
-    private String name;
+    private final String name;
 
     @Contract(pure = true)
     EmoteServerType(String name){

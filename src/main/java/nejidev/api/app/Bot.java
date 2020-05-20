@@ -1,6 +1,8 @@
 package nejidev.api.app;
 
 import nejidev.api.banners.Banner;
+import nejidev.api.database.DatabaseUser;
+import nejidev.api.database.NejiDatabase;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -13,6 +15,7 @@ import net.dv8tion.jda.api.utils.ChunkingFilter;
 import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -66,6 +69,12 @@ public abstract class Bot {
     public Bot load(long serverId) throws LoginException {
         JDABuilder builder = JDABuilder.createDefault(token).addEventListeners(new ListenerAdapter() {
             public void onReady(@Nonnull ReadyEvent event) {
+
+                try {
+                    new NejiDatabase(DatabaseUser.createUser("db.json"), "nejibotdb");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
                 javaDiscordAPI = event.getJDA();
 

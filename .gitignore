@@ -24,3 +24,5 @@
 hs_err_pid*
 /build/resources/main/.token
 /src/main/resources/.token
+
+/src/main/resources/db.json

@@ -18,7 +18,6 @@ public class OpenIssueTagEvent implements ITagEvent {
 
         assert message != null;
 
-
         if(message.getTextChannel().getIdLong() != NejiAPI.ISSUE_CHANNEL_ID){
             NejiAPI.sendTemporaryMessage(
                     new EmbedBuilder()

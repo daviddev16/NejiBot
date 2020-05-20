@@ -66,11 +66,15 @@ public abstract class Bot {
     public Bot load(long serverId) throws LoginException {
         JDABuilder builder = JDABuilder.createDefault(token).addEventListeners(new ListenerAdapter() {
             public void onReady(@Nonnull ReadyEvent event) {
+
                 javaDiscordAPI = event.getJDA();
+
                 serverGuild = event.getJDA().getGuildById(serverId);
+
                 onConnected();
             }
         });
+
         builder.setChunkingFilter(ChunkingFilter.ALL);
         builder.setEnabledIntents(EnumSet.allOf(GatewayIntent.class));
         builder.build();

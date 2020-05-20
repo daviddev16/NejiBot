@@ -7,6 +7,7 @@ import nejidev.api.NejiAPI;
 import nejidev.api.commands.CommandBase;
 import nejidev.api.commands.ReceivedInfo;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 
@@ -31,25 +32,27 @@ public class DesmuteCommand extends CommandBase {
 
         if(!NejiAPI.Permissions.checkMasterPermissions(ri.getSender())) return false;
 
-        if(checkArgs(ri.getArguments(), 1)) {
+        if (ri.getMentions().isEmpty()) {
+            sendError(ri, USAGE);
+            return false;
+        }
+        Member mentionedMember = ri.getMentions().get(0);
 
             Role roleSilenciado = NejiAPI.getServerGuild().getRoleById(NejiAPI.Permissions.SILENCIADO);
             Objects.requireNonNull(roleSilenciado);
-            NejiAPI.getServerGuild().removeRoleFromMember(ri.getMentions().get(0), roleSilenciado).queue();
+            NejiAPI.getServerGuild().removeRoleFromMember(mentionedMember, roleSilenciado).queue();
 
-            EmbedBuilder builder = new EmbedBuilder();
-            builder.setTitle("Usuario desmutado por " + ri.getSender().getUser().getName());
-            builder.setDescription("O usuario " + ri.getMentions().get(0).getUser().getName() + " foi desmutado de falar no chat.");
-            builder.setThumbnail(ri.getSender().getUser().getAvatarUrl());
-            builder.setColor(Color.decode("#AA00AA"));
-            builder.setFooter("Comando executado pelo "  + NejiAPI.getSelfName(), ri.getSender().getUser().getAvatarUrl());
-            send(ri, builder).queue(msg -> react(msg, NejiAPI.getEmote(EmoteServerType.OK)));
+            EmbedBuilder builder = new EmbedBuilder()
+            .setTitle("Usuario desmutado por " + ri.getSender().getUser().getName())
+            .setDescription("O usuario " + mentionedMember.getUser().getName() + " foi desmutado de falar no chat.")
+            .setThumbnail(ri.getSender().getUser().getAvatarUrl())
+            .setColor(Color.decode("#AA00AA"))
+            .setFooter("Comando executado pelo "  + NejiAPI.getSelfName(), ri.getSender().getUser().getAvatarUrl());
+
+            sendEmbed(ri, builder).queue(msg -> NejiAPI.quickReact(msg, NejiAPI.getEmote(EmoteServerType.OK)));
 
             return true;
 
-        }else{
-            send(ri, NejiAPI.buildMsg(ri, "Você inseriu o comando errado.", USAGE)).queue(msg -> react(msg, NejiAPI.getEmote(EmoteServerType.DENIED)));
-            return false;
-        }
+
     }
 }

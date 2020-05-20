@@ -23,7 +23,12 @@ public enum EmoteServerType {
     SICKO("sick"),
 
     /*neji emotes*/
-    HAPPY("happy");
+    HAPPY("happy"),
+
+    /*issue tag emotes*/
+    CLOSED("closed"),
+    OPENED("open");
+
 
     /*nome do emote na lista de emotes do server*/
     private String name;

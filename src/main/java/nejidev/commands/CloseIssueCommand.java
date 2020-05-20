@@ -14,7 +14,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.awt.*;
 import java.time.Duration;
-import java.util.Objects;
 
 @CommandCategory(category = Category.SERVER)
 public class CloseIssueCommand extends CommandBase {
@@ -58,10 +57,9 @@ public class CloseIssueCommand extends CommandBase {
                 return true;
             }
 
-            issueMessage.removeReaction(NejiAPI.getEmote(EmoteServerType.OPENED)).queue();
+            issueMessage.clearReactions(NejiAPI.getEmote(EmoteServerType.OPENED)).queue();
             issueMessage.addReaction(NejiAPI.getEmote(EmoteServerType.CLOSED)).queue();
 
-            Objects.requireNonNull(ri.getSender());
             NejiDatabase.addIssue(ri.getSender());
 
             return true;

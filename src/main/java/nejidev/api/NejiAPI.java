@@ -1,14 +1,14 @@
 package nejidev.api;
 
 import nejidev.api.banners.Banner;
-import nejidev.api.utils.Schedule;
-import nejidev.banners.BannerType;
 import nejidev.api.banners.ReactionRole;
 import nejidev.api.commands.CommandBase;
 import nejidev.api.commands.ReceivedInfo;
 import nejidev.api.emotes.EmoteServerType;
 import nejidev.api.tag.Tag;
+import nejidev.api.utils.Schedule;
 import nejidev.api.utils.Utils;
+import nejidev.banners.BannerType;
 import nejidev.main.MainApplication;
 import nejidev.main.NejiBot;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -19,12 +19,13 @@ import org.json.JSONObject;
 
 import javax.annotation.Nullable;
 import java.awt.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.time.Duration;
 import java.util.Objects;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public final class NejiAPI {
 
@@ -34,8 +35,10 @@ public final class NejiAPI {
         public static long MESTRE = 707781835215863939L;
         public static long ADMIN = 707784420018618398L;
         public static long BOOSTER = 711843254324166689L;
-        public static long EVERYONE = -1L;
         public static long SILENCIADO = 711342722937782293L;
+        public static long DESENVOLVEDOR = 707784153252495424L;
+        public static long GAME_DESIGNER = 707784246667903046L;
+        public static long EVERYONE = -1L;
 
 
         public static boolean checkMasterPermissions(Member member){
@@ -44,6 +47,10 @@ public final class NejiAPI {
 
         public static boolean checkTagPermissions(Member member){
             return NejiAPI.checkPermission(member, ADMIN, MESTRE, BOOSTER);
+        }
+
+        public static boolean checkIssuesPermission(Member member){
+            return NejiAPI.checkPermission(member, MESTRE, ADMIN, GAME_DESIGNER, DESENVOLVEDOR);
         }
 
 
@@ -266,6 +273,12 @@ public final class NejiAPI {
     /*enviar uma mensagem temporaria.*/
     public static void sendTemporaryMessage(MessageEmbed embed, TextChannel channel, Duration duration){
         channel.sendMessage(embed).queue(message -> Schedule.newScheduleEvent(duration, () -> channel.deleteMessageById(message.getIdLong()).queue()));
+    }
+    public static void sendTemporaryMessage(MessageEmbed embed, TextChannel channel, Duration duration, Emote emote){
+        channel.sendMessage(embed).queue(message -> {
+            message.addReaction(emote).queue();
+            Schedule.newScheduleEvent(duration, () -> channel.deleteMessageById(message.getIdLong()).queue());
+        });
     }
 
     public static Message findIssue(String id){

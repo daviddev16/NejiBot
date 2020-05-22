@@ -3,6 +3,7 @@ package nejidev.tags.issues;
 import nejidev.api.NejiAPI;
 import nejidev.api.emotes.EmoteServerType;
 import nejidev.api.listeners.ITagEvent;
+import nejidev.api.utils.Logs;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 
@@ -62,7 +63,7 @@ public class OpenIssueTagEvent implements ITagEvent {
         ).queue(msg -> msg.addReaction(NejiAPI.getEmote(EmoteServerType.OK)).queue()));
         message.addReaction(NejiAPI.getEmote(EmoteServerType.OPENED)).queue();
 
-
+        Logs.send("A issue \"" + message.getIdLong() + "\" foi aberta por " + message.getAuthor().getName() + " !").queue();
 
     }
 }

@@ -5,6 +5,7 @@ import nejidev.api.commands.CommandBase;
 import nejidev.api.commands.ReceivedInfo;
 import nejidev.api.commands.miscs.Category;
 import nejidev.api.commands.miscs.CommandCategory;
+import nejidev.api.database.MemberElementType;
 import nejidev.api.database.NejiDatabase;
 import nejidev.api.emotes.EmoteServerType;
 import nejidev.tags.issues.OpenIssueTagEvent;
@@ -34,15 +35,17 @@ public class CloseIssueCommand extends CommandBase {
         if(checkArgs(ri.getArguments(), 1)){
 
             String id = ri.getArguments()[0].trim();
-            Message issueMessage = NejiAPI.findIssue(id);
-
+            Message issueMessage = null;
+            try {
+                issueMessage = NejiAPI.findIssue(id);
+            }catch (Exception ignored){
+            }
             if(issueMessage == null){
                 sendSimple(ri, "Essa issue não existe.");
                 return false;
             }
 
             if(issueMessage.getReactions().stream().noneMatch(reaction -> reaction.getReactionEmote().getName().equalsIgnoreCase("open"))){
-
                 NejiAPI.sendTemporaryMessage(
                         new EmbedBuilder()
                                 .setColor(Color.green)
@@ -56,11 +59,10 @@ public class CloseIssueCommand extends CommandBase {
 
                 return true;
             }
-
             issueMessage.clearReactions(NejiAPI.getEmote(EmoteServerType.OPENED)).queue();
             issueMessage.addReaction(NejiAPI.getEmote(EmoteServerType.CLOSED)).queue();
 
-            NejiDatabase.addIssue(ri.getSender());
+            NejiDatabase.updateMember(ri.getSender(), MemberElementType.ISSUE);
 
             return true;
         }

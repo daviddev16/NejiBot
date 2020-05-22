@@ -63,6 +63,7 @@ public class NejiBot extends Bot {
         NejiAPI.registerCommand(new DesmuteCommand());
         NejiAPI.registerCommand(new CloseIssueCommand());
         NejiAPI.registerCommand(new RankCommand());
+        NejiAPI.registerCommand(new ClearChatCommand());
     }
 
     public void registerTags(){

@@ -1,7 +1,6 @@
 package nejidev.events;
 
 import nejidev.api.NejiAPI;
-import nejidev.api.database.NejiDatabase;
 import nejidev.utils.ImageCreator;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -24,8 +23,6 @@ public class WelcomeListener extends ListenerAdapter {
         Objects.requireNonNull(playerRole);
         NejiAPI.getServerGuild().addRoleToMember(event.getMember(), playerRole).queue();
         TextChannel welcomeChannel = NejiAPI.getServerTextChannel(NejiAPI.WELCOME_CHANNEL_ID);
-
-        NejiDatabase.checkAndAddMember(event.getMember());
 
         try {
 

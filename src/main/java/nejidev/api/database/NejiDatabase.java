@@ -1,21 +1,29 @@
 package nejidev.api.database;
 
-import com.mongodb.client.*;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.result.UpdateResult;
 import net.dv8tion.jda.api.entities.Member;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 public class NejiDatabase {
 
+    public static String ISSUES_KEY = "issues";
+    public static String DISCORD_ID_KEY = "discordId";
+
+    public static String ISSUES_COLLECTION_NAME = "issues";
+
+    public static String SUCCESSFULLY_ISSUE_UPDATE_LOG = "[DB INFO]: \"%s\" [%s] foi atualizado no campo de issues com successo.";
+
     private final DatabaseUser databaseUser;
-
     private final MongoDatabase database;
-
-    private final MongoCollection<Document> usersCollection;
-
     private static NejiDatabase singleton;
 
     public NejiDatabase(DatabaseUser databaseUser, String name){
@@ -36,79 +44,95 @@ public class NejiDatabase {
 
             Objects.requireNonNull(mongoClient);
             database = mongoClient.getDatabase(name);
-            usersCollection = database.getCollection("users");
         }
         singleton = this;
     }
 
-    public static void checkAndAddMember(@NotNull Member member){
+    public static void updateMember(@NotNull Member member, MemberElementType updateType, Object... params){
 
-        if(hasMember(member)) return;
+        switch (updateType){
 
-        Document document = new Document();
-        document.put("discordId", member.getUser().getIdLong());
-        document.put("issues", 0);
-        insertDocument(document);
-    }
+            case ISSUE:
 
-    public static void addIssue(@NotNull Member member){
-        checkAndAddMember(member);
-        Document oldMemberDocument = queryMember(member);
+                MongoCollection<Document> issuesCollection = getSingleton().getDatabase().getCollection(ISSUES_COLLECTION_NAME);
 
-        assert oldMemberDocument != null;
+                Document oldMemberDocument = queryMember(issuesCollection, member);
 
-        Document newMemberDocument = new Document();
-
-        newMemberDocument.put("discordId", oldMemberDocument.getLong("discordId"));
-        newMemberDocument.put("issues", oldMemberDocument.getInteger("issues")+1);
-
-        getSingleton().getUsersCollection().updateOne(filter(member), newSet(newMemberDocument));
-    }
-
-    private static Bson filter(@NotNull  Member member){
-        return new Document("discordId", member.getUser().getIdLong());
-    }
-
-    private static Bson newSet(Document newValues){
-        Document setDocument = new Document();
-        setDocument.put("$set", newValues);
-        return setDocument;
-    }
-
-    public static Integer getIssuesFrom(Member member){
-        checkAndAddMember(member);
-        Document memberDocument = queryMember(member);
-        assert memberDocument != null;
-        return memberDocument.getInteger("issues");
-    }
-
-    private static Document queryMember(@NotNull Member member){
-        try (MongoCursor<Document> cursor = getSingleton().getUsersCollection().find().iterator()) {
-            while (cursor.hasNext()) {
-                Document document = cursor.next();
-                if (document.containsKey("discordId") &&
-                        document.getLong("discordId") == member.getUser().getIdLong()) {
-                    return document;
+                if(oldMemberDocument == null){
+                    issuesCollection.insertOne(createDefaultIssueDocument(member));
+                    oldMemberDocument = queryMember(issuesCollection, member);
                 }
-            }
+
+                Objects.requireNonNull(oldMemberDocument);
+
+                int countIssues = oldMemberDocument.getInteger(ISSUES_KEY);
+
+                updateMemberData(member, issuesCollection, ISSUES_KEY, (countIssues+1), updateResult -> {
+                    if(updateResult.wasAcknowledged() && updateResult.getModifiedCount() > 0){
+                        System.out.println(String.format(SUCCESSFULLY_ISSUE_UPDATE_LOG, member.getIdLong(), member.getUser().getName()));
+                    }
+                });
+
+                break;
         }
-        return null;
+
     }
 
-    private static boolean hasMember(@NotNull Member member){
-        return queryMember(member) != null;
+    public static Object commonGet(@NotNull Member member, MemberElementType type, String key){
+        AtomicReference<Object> o = new AtomicReference<>();
+        get(member, type, key, o::set);
+        return o.get();
     }
 
-    private static void insertDocument(Document document){
-        getSingleton().getUsersCollection().insertOne(document);
+    public static void get(@NotNull Member member, MemberElementType type, String key, Consumer<Object> objectConsumer) {
+        switch (type) {
+
+            case ISSUE:
+
+                MongoCollection<Document> issuesCollection = getSingleton().getDatabase().getCollection(ISSUES_COLLECTION_NAME);
+                Document memberDocument = queryMember(issuesCollection, member);
+
+                if(memberDocument == null){
+                    objectConsumer.accept(null);
+                    break;
+                }
+
+                objectConsumer.accept(memberDocument.get(key));
+        }
+    }
+
+    private static void updateMemberData(@NotNull Member member, MongoCollection<Document> collection, String key, Object updatedValue, Consumer<UpdateResult> updateResultConsumer){
+        updateResultConsumer.accept(collection.updateOne(filterMember(member), newSet(update(key, updatedValue))));
+
+    }
+
+    public static Document queryMember(MongoCollection<Document> collection, @NotNull  Member member){
+        return collection.find(filterMember(member)).first();
+    }
+
+
+    private static Document update(String key, Object newValue){
+        return new Document(key, newValue);
+    }
+
+    private static Document newSet(Document updateDocument){
+        return new Document("$set", updateDocument);
+    }
+
+    private static Document filterMember(Member member){
+        return new Document(DISCORD_ID_KEY, member.getUser().getIdLong());
+    }
+
+    private static Document createDefaultIssueDocument(@NotNull Member member){
+        return createDefaultDocument(member).append(ISSUES_KEY, 0);
+    }
+
+    private static Document createDefaultDocument(@NotNull Member member){
+        return new Document().append(DISCORD_ID_KEY, member.getIdLong());
     }
 
     public MongoDatabase getDatabase(){
         return database;
-    }
-
-    public MongoCollection<Document> getUsersCollection(){
-        return usersCollection;
     }
 
     public DatabaseUser getDatabaseUser(){

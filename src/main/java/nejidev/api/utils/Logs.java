@@ -15,7 +15,7 @@ public final class Logs {
 
     private static String logPrefix(){
         LocalDateTime ldt = LocalDateTime.now();
-        return "[" + ldt.getDayOfMonth() + "/" + ldt.getMonth().getValue() + "/" + ldt.getYear() + " " + ldt.getHour() + ":" + ldt.getMinute() + ":" + ldt.getSecond() + "]: ";
+        return "[" + ldt.getDayOfMonth() + "/" + ldt.getMonth().getValue() + "/" + ldt.getYear() + " - " + ldt.getHour() + ":" + ldt.getMinute() + ":" + ldt.getSecond() + "]: ";
     }
 
 }

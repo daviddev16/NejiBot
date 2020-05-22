@@ -16,7 +16,9 @@ public class Schedule {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             public void run() {
-                runnable.run();
+                try {
+                    runnable.run();
+                }catch (NullPointerException ignored){}
             }
         }, duration.toMillis());
 

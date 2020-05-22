@@ -30,7 +30,6 @@ import java.util.Random;
 public final class NejiAPI {
 
     public static final class Permissions {
-
         /*roles*/
         public static long MESTRE = 707781835215863939L;
         public static long ADMIN = 707784420018618398L;
@@ -40,17 +39,18 @@ public final class NejiAPI {
         public static long GAME_DESIGNER = 707784246667903046L;
         public static long EVERYONE = -1L;
 
-
         public static boolean checkMasterPermissions(Member member){
             return NejiAPI.checkPermission(member, ADMIN, MESTRE);
         }
 
         public static boolean checkTagPermissions(Member member){
-            return NejiAPI.checkPermission(member, ADMIN, MESTRE, BOOSTER);
+            //return NejiAPI.checkPermission(member, ADMIN, MESTRE, BOOSTER);
+            return NejiAPI.checkPermission(member, EVERYONE);
         }
 
         public static boolean checkIssuesPermission(Member member){
-            return NejiAPI.checkPermission(member, MESTRE, ADMIN, GAME_DESIGNER, DESENVOLVEDOR);
+            //return NejiAPI.checkPermission(member, MESTRE, ADMIN, GAME_DESIGNER, DESENVOLVEDOR);
+            return NejiAPI.checkPermission(member, EVERYONE);
         }
 
 

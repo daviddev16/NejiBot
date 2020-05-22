@@ -5,6 +5,7 @@ public enum Category {
     FUNDAMENTAL,
     SERVER,
     ADMIN,
+    DEV,
     FUN
 
 }

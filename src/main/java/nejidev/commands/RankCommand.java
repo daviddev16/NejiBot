@@ -5,6 +5,7 @@ import nejidev.api.commands.CommandBase;
 import nejidev.api.commands.ReceivedInfo;
 import nejidev.api.commands.miscs.Category;
 import nejidev.api.commands.miscs.CommandCategory;
+import nejidev.api.database.MemberElementType;
 import nejidev.api.database.NejiDatabase;
 import nejidev.api.emotes.EmoteServerType;
 import nejidev.utils.Ranks;
@@ -32,18 +33,29 @@ public class RankCommand extends CommandBase {
             rankMember = ri.getMentions().get(0);
         }
 
-        int issues = NejiDatabase.getIssuesFrom(rankMember);
+        Member finalRankMember = rankMember;
+        NejiDatabase.get(rankMember, MemberElementType.ISSUE, NejiDatabase.ISSUES_KEY, issues -> {
 
-        EmbedBuilder builder = new EmbedBuilder()
-                .setTitle("Rank de " + rankMember.getUser().getName())
-                .setDescription("Rank mostra a contribuição que os desenvolvedores tem no servidor!")
-                .setColor(Color.decode("#77dd91"))
-                .setThumbnail("https://i.imgur.com/ORJyHHl.png")
-                .addField("Issues fechadas: ",Integer.toString(issues),true)
-                .addField("Experiencia: ", Ranks.get(issues), true)
-                .setFooter("Placar baseado nas ultimas atividades do usuario");
+            if(issues == null) {
+                sendSimple(ri, "Este usuario não possui alcançe o suficiente para um rank").queue();
+                return;
+            }
 
-        sendEmbed(ri, builder).queue(msg -> NejiAPI.quickReact(msg, NejiAPI.getEmote(EmoteServerType.UP_VOTE)));
+            int countIssues = (Integer)issues;
+
+            EmbedBuilder builder = new EmbedBuilder()
+                    .setTitle("Rank de " + finalRankMember.getUser().getName())
+                    .setDescription("Rank mostra a contribuição que os desenvolvedores tem no servidor!")
+                    .setColor(Color.decode("#77dd91"))
+                    .setThumbnail("https://i.imgur.com/ORJyHHl.png")
+                    .addField("Issues fechadas: ", Integer.toString(countIssues), true)
+                    .addField("Experiencia: ", Ranks.get(countIssues), true)
+                    .setFooter("Placar baseado nas ultimas atividades do usuario");
+
+            sendEmbed(ri, builder).queue(msg -> NejiAPI.quickReact(msg, NejiAPI.getEmote(EmoteServerType.UP_VOTE)));
+
+        });
+
         return true;
     }
 }

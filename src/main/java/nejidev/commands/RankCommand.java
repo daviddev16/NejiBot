@@ -42,7 +42,6 @@ public class RankCommand extends CommandBase {
             }
 
             int countIssues = (Integer)issues;
-
             EmbedBuilder builder = new EmbedBuilder()
                     .setTitle("Rank de " + finalRankMember.getUser().getName())
                     .setDescription("Rank mostra a contribuição que os desenvolvedores tem no servidor!")

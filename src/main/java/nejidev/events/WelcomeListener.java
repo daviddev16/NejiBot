@@ -23,7 +23,6 @@ public class WelcomeListener extends ListenerAdapter {
         Objects.requireNonNull(playerRole);
         NejiAPI.getServerGuild().addRoleToMember(event.getMember(), playerRole).queue();
         TextChannel welcomeChannel = NejiAPI.getServerTextChannel(NejiAPI.WELCOME_CHANNEL_ID);
-
         try {
 
             assert welcomeChannel != null;

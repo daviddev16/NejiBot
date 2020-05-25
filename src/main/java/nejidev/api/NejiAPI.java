@@ -4,6 +4,8 @@ import nejidev.api.banners.Banner;
 import nejidev.api.banners.ReactionRole;
 import nejidev.api.commands.CommandBase;
 import nejidev.api.commands.ReceivedInfo;
+import nejidev.api.database.MemberElementType;
+import nejidev.api.database.NejiDatabase;
 import nejidev.api.emotes.EmoteServerType;
 import nejidev.api.tag.Tag;
 import nejidev.api.utils.Schedule;
@@ -77,6 +79,9 @@ public final class NejiAPI {
 
     /*issues category*/
     public static final long ISSUES_CATEGORY_ID = 714291287452549190L;
+
+    /*development category*/
+    public static final long DEVELOPMENT_CATEGORY_ID = 709283015318175804L;
 
     /*acessar os banners do servidor*/
     public static Banner getServerBanner(BannerType bannerType){
@@ -294,6 +299,21 @@ public final class NejiAPI {
         message.addReaction(emote).queue();
     }
 
+    public static int getIssuesByMember(Member member){
+        Object returnObject = NejiDatabase.commonGet(member, MemberElementType.ISSUE, NejiDatabase.ISSUES_KEY);
+        if(returnObject == null){
+            return 0;
+        }
+        return Integer.parseInt(returnObject.toString());
+    }
+
+    public static int getRankByMember(Member member){
+        Object returnObject = NejiDatabase.commonGet(member, MemberElementType.RANK, NejiDatabase.RANK_KEY);
+        if(returnObject == null){
+            return 0;
+        }
+        return Integer.parseInt(returnObject.toString());
+    }
 
     @Nullable
     public static Member findMember(String userId){

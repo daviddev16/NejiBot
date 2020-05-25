@@ -4,11 +4,16 @@ import nejidev.api.NejiAPI;
 import nejidev.api.emotes.EmoteServerType;
 import nejidev.api.listeners.ITagEvent;
 import nejidev.api.utils.Logs;
+import nejidev.api.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 
 import javax.annotation.Nullable;
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.RenderedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.Duration;
 import java.util.Objects;
 
@@ -62,6 +67,24 @@ public class OpenIssueTagEvent implements ITagEvent {
 
         ).queue(msg -> msg.addReaction(NejiAPI.getEmote(EmoteServerType.OK)).queue()));
         message.addReaction(NejiAPI.getEmote(EmoteServerType.OPENED)).queue();
+
+        Objects.requireNonNull(NejiAPI.getServerGuild().getCategoryById(NejiAPI.ISSUES_CATEGORY_ID)).createTextChannel(message.getId()).queue(textChannel -> {
+            textChannel.sendMessage(message).queue(msg -> NejiAPI.quickReact(msg, NejiAPI.getEmote(EmoteServerType.LINK)));
+
+            message.getAttachments().forEach(attachment -> {
+
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                try {
+                    ImageIO.write((RenderedImage) Utils.openImage(attachment.getUrl()), "png", bos);
+                    bos.flush();
+                    byte [] data = bos.toByteArray();
+                    bos.close();
+                    textChannel.sendFile(data, "attached.png").queue(msg -> NejiAPI.quickReact(msg, NejiAPI.getEmote(EmoteServerType.LINK)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        });
 
         Logs.send("A issue \"" + message.getIdLong() + "\" foi aberta por " + message.getAuthor().getName() + " !").queue();
 

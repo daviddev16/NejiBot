@@ -3,10 +3,12 @@ package nejidev.tags.issues;
 import nejidev.api.NejiAPI;
 import nejidev.api.emotes.EmoteServerType;
 import nejidev.api.listeners.ITagEvent;
+import nejidev.api.tag.TagQueryResult;
 import nejidev.api.utils.Logs;
 import nejidev.api.utils.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
@@ -22,7 +24,7 @@ public class OpenIssueTagEvent implements ITagEvent {
     public static String issueIconURL = "https://i.imgur.com/Vv1Q4Zl.png";
 
     @Override
-    public void onTaggedMessageEvent(@Nullable Message message) {
+    public void onTaggedMessageEvent(@Nullable Message message, @NotNull TagQueryResult tagQueryResult) {
 
         assert message != null;
 
@@ -75,11 +77,13 @@ public class OpenIssueTagEvent implements ITagEvent {
 
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 try {
+
                     ImageIO.write((RenderedImage) Utils.openImage(attachment.getUrl()), "png", bos);
                     bos.flush();
                     byte [] data = bos.toByteArray();
                     bos.close();
                     textChannel.sendFile(data, "attached.png").queue(msg -> NejiAPI.quickReact(msg, NejiAPI.getEmote(EmoteServerType.LINK)));
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

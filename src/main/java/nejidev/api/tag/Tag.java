@@ -3,6 +3,7 @@ package nejidev.api.tag;
 import nejidev.api.listeners.ITagEvent;
 import nejidev.tags.EmptyTagEvent;
 import net.dv8tion.jda.api.entities.Message;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -35,7 +36,7 @@ public class Tag {
 
     /*quando tudo for compilado e a tag for validada
     * essa função será chamada*/
-    public void callEvent(Message message) { event.onTaggedMessageEvent(message); }
+    public void callEvent(@NotNull Message message, @NotNull TagQueryResult queryResult) { event.onTaggedMessageEvent(message, queryResult); }
 
     /*metodo para criar um objeto tag com mais facilidade. */
     public static Tag createTag(String key, Supplier<ITagEvent> event){

@@ -74,6 +74,7 @@ public class NejiBot extends Bot {
         NejiAPI.registerTag(Tag.createTag("sicko", SickoTagEvent::new));
         NejiAPI.registerTag(Tag.createTag("issue", OpenIssueTagEvent::new));
         NejiAPI.registerTag(Tag.createTag("vote", VoteTagEvent::new));
+        NejiAPI.registerTag(Tag.createTag("option", OptionTagEvent::new));
 
     }
 

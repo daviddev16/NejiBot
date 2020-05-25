@@ -1,13 +1,10 @@
 package nejidev.api.tag;
 
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
-import org.w3c.dom.events.EventException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 
 /*classe responsavel por procurar alguma tag na mensagem do membro*/
 final class TagToken {
@@ -19,11 +16,15 @@ final class TagToken {
     private boolean isValid;
 
     /*StringBuffer para concatenar os characteres dentro da tag*/
-    private StringBuffer buffer;
+    private final StringBuffer buffer;
+
+    /*Token options*/
+    private final List<String> options;
 
     public TagToken(){
         this.isValid = false;
         this.buffer = new StringBuffer();
+        options = new ArrayList<>();
     }
 
     public boolean isValid(){
@@ -35,6 +36,10 @@ final class TagToken {
         return this;
     }
 
+    public void addOption(String option){
+        options.add(option);
+    }
+
     public void append(char char1){
         buffer.append(char1);
     }
@@ -42,6 +47,10 @@ final class TagToken {
     /*obter resultado da pesquisa*/
     public String getResultKey(){
         return buffer.toString().trim();
+    }
+
+    public List<String> getOptions(){
+        return this.options;
     }
 
     /*
@@ -70,7 +79,10 @@ final class TagToken {
         char currentChar;
         int currentIndex = 0;
 
+        boolean optionToken = false;
         TagToken currentToken = null;
+
+        StringBuilder optionBuffer = new StringBuilder();
 
         while(currentIndex < message.getContentRaw().length()){
 
@@ -87,6 +99,14 @@ final class TagToken {
             }
             else if(currentChar == ']' && currentToken != null){
 
+                if(StringUtils.isNotEmpty(optionBuffer.toString())){
+
+                    optionBuffer.trimToSize();
+
+                    currentToken.addOption(optionBuffer.toString());
+
+                }
+
                 if(currentToken.getResultKey().isEmpty()){
                     currentToken.setValid(false);
                 }
@@ -99,21 +119,43 @@ final class TagToken {
                 continue;
 
             }
-
-            else if(currentToken != null) {
+            else if(currentChar == ':' && !optionToken) {
+                optionToken = true;
+                currentIndex++;
+                continue;
+            }
+            else if(currentToken != null && !optionToken) {
                 currentToken.append(currentChar);
             }
+            else if(currentChar == ',' && optionToken && currentToken != null){
 
+                if(StringUtils.isNotEmpty(optionBuffer.toString())){
+
+                    optionBuffer.trimToSize();
+
+                    currentToken.addOption(optionBuffer.toString());
+
+                }
+
+                optionBuffer.delete(0, optionBuffer.length());
+
+                currentIndex++;
+                continue;
+            }
+            else if(optionToken){
+                optionBuffer.append(currentChar);
+            }
             currentIndex++;
         }
 
         try {
 
+            assert currentToken != null;
             tokenList.stream().filter(TagToken::isValid).forEach(tagToken -> {
 
                 registeredTags.stream().filter(tag -> tag.isMine(tagToken)).forEach(foundTag -> {
 
-                    foundTag.callEvent(message);
+                    foundTag.callEvent(message, new TagQueryResult(tagToken.getResultKey(), tagToken.getOptions(), tagToken.isValid()));
 
                 });
             });

@@ -1,6 +1,5 @@
 package nejidev.api.commands;
 
-import nejidev.api.NejiAPI;
 import nejidev.api.commands.miscs.Category;
 import nejidev.api.commands.miscs.CommandCategory;
 import nejidev.api.commands.miscs.ICategory;
@@ -30,7 +29,7 @@ public abstract class CommandBase extends CommandOutput implements ICategory {
         return this.command;
     }
 
-    public boolean checkArgs(String[] args, int requiredCount){
+    public static boolean checkArgs(Object[] args, int requiredCount){
         return args.length == requiredCount;
     }
 

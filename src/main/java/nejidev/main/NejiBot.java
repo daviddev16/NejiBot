@@ -8,6 +8,7 @@ import nejidev.api.tag.TagManager;
 import nejidev.banners.GameEngineBanner;
 import nejidev.banners.ProgrammingLanguageBanner;
 import nejidev.commands.*;
+import nejidev.events.MessageListener;
 import nejidev.events.WelcomeListener;
 import nejidev.tags.*;
 import nejidev.tags.issues.OpenIssueTagEvent;
@@ -33,7 +34,7 @@ public class NejiBot extends Bot {
 
     public void onConnected() {
 
-        getJavaDiscordAPI().addEventListener(new WelcomeListener());
+        getJavaDiscordAPI().addEventListener(new WelcomeListener(), new MessageListener());
 
         tagManager = new TagManager();
         tagManager.attachListener(this);

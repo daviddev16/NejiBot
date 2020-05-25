@@ -5,6 +5,7 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.result.UpdateResult;
+import nejidev.api.commands.CommandBase;
 import net.dv8tion.jda.api.entities.Member;
 import org.bson.Document;
 import org.jetbrains.annotations.NotNull;
@@ -16,11 +17,14 @@ import java.util.function.Consumer;
 public class NejiDatabase {
 
     public static String ISSUES_KEY = "issues";
+    public static String RANK_KEY = "rank";
     public static String DISCORD_ID_KEY = "discordId";
 
     public static String ISSUES_COLLECTION_NAME = "issues";
+    public static String RANK_COLLECTION_NAME = "rank";
 
     public static String SUCCESSFULLY_ISSUE_UPDATE_LOG = "[DB INFO]: \"%s\" [%s] foi atualizado no campo de issues com successo.";
+    public static String SUCCESSFULLY_RANK_UPDATE_LOG = "[DB INFO]: \"%s\" [%s] foi atualizado no campo de rank com successo.";
 
     private final DatabaseUser databaseUser;
     private final MongoDatabase database;
@@ -50,30 +54,62 @@ public class NejiDatabase {
 
     public static void updateMember(@NotNull Member member, MemberElementType updateType, Object... params){
 
+        MongoCollection<Document> collection;
+        Document oldMemberDocument;
+
         switch (updateType){
 
             case ISSUE:
 
-                MongoCollection<Document> issuesCollection = getSingleton().getDatabase().getCollection(ISSUES_COLLECTION_NAME);
+                collection = getSingleton().getDatabase().getCollection(ISSUES_COLLECTION_NAME);
 
-                Document oldMemberDocument = queryMember(issuesCollection, member);
+                oldMemberDocument = queryMember(collection, member);
 
                 if(oldMemberDocument == null){
-                    issuesCollection.insertOne(createDefaultIssueDocument(member));
-                    oldMemberDocument = queryMember(issuesCollection, member);
+                    collection.insertOne(createDefaultIssueDocument(member));
+                    oldMemberDocument = queryMember(collection, member);
                 }
 
                 Objects.requireNonNull(oldMemberDocument);
 
                 int countIssues = oldMemberDocument.getInteger(ISSUES_KEY);
 
-                updateMemberData(member, issuesCollection, ISSUES_KEY, (countIssues+1), updateResult -> {
+                updateMemberData(member, collection, ISSUES_KEY, (countIssues+1), updateResult -> {
                     if(updateResult.wasAcknowledged() && updateResult.getModifiedCount() > 0){
                         System.out.println(String.format(SUCCESSFULLY_ISSUE_UPDATE_LOG, member.getIdLong(), member.getUser().getName()));
                     }
                 });
 
                 break;
+
+            case RANK:
+
+                if(!CommandBase.checkArgs(params, 1)){
+                    break;
+                }
+
+                collection = getSingleton().getDatabase().getCollection(RANK_COLLECTION_NAME);
+
+                oldMemberDocument = queryMember(collection, member);
+
+                if(oldMemberDocument == null){
+                    collection.insertOne(createDefaultRankDocument(member));
+                    oldMemberDocument = queryMember(collection, member);
+                }
+
+                Objects.requireNonNull(oldMemberDocument);
+
+                int currentAmount = oldMemberDocument.getInteger(RANK_KEY);
+                int addAmount = Integer.parseInt(params[0].toString());
+
+                updateMemberData(member, collection, RANK_KEY, (currentAmount+addAmount), updateResult -> {
+                    if(updateResult.wasAcknowledged() && updateResult.getModifiedCount() > 0){
+                        System.out.println(String.format(SUCCESSFULLY_RANK_UPDATE_LOG, member.getIdLong(), member.getUser().getName()));
+                    }
+                });
+
+                break;
+
         }
 
     }
@@ -85,12 +121,16 @@ public class NejiDatabase {
     }
 
     public static void get(@NotNull Member member, MemberElementType type, String key, Consumer<Object> objectConsumer) {
+
+        MongoCollection<Document> collection;
+        Document memberDocument;
+
         switch (type) {
 
             case ISSUE:
 
-                MongoCollection<Document> issuesCollection = getSingleton().getDatabase().getCollection(ISSUES_COLLECTION_NAME);
-                Document memberDocument = queryMember(issuesCollection, member);
+                collection = getSingleton().getDatabase().getCollection(ISSUES_COLLECTION_NAME);
+                memberDocument = queryMember(collection, member);
 
                 if(memberDocument == null){
                     objectConsumer.accept(null);
@@ -98,6 +138,19 @@ public class NejiDatabase {
                 }
 
                 objectConsumer.accept(memberDocument.get(key));
+                break;
+
+            case RANK:
+                collection = getSingleton().getDatabase().getCollection(RANK_COLLECTION_NAME);
+                memberDocument = queryMember(collection, member);
+
+                if(memberDocument == null){
+                    objectConsumer.accept(null);
+                    break;
+                }
+
+                objectConsumer.accept(memberDocument.get(key));
+                break;
         }
     }
 
@@ -125,6 +178,10 @@ public class NejiDatabase {
 
     private static Document createDefaultIssueDocument(@NotNull Member member){
         return createDefaultDocument(member).append(ISSUES_KEY, 0);
+    }
+
+    private static Document createDefaultRankDocument(@NotNull Member member){
+        return createDefaultDocument(member).append(RANK_KEY, 0);
     }
 
     private static Document createDefaultDocument(@NotNull Member member){

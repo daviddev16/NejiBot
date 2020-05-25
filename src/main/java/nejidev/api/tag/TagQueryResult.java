@@ -24,6 +24,8 @@ public class TagQueryResult {
         return options;
     }
 
+    /*this variable will always be true on ITagEvent TagQueryResult.*/
+    @Deprecated
     public boolean isValid() {
         return isValid;
     }

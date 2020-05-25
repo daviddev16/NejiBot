@@ -4,6 +4,7 @@ import nejidev.api.utils.Utils;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -12,10 +13,10 @@ import java.util.function.Consumer;
 public class ReceivedInfo {
 
     /*comando executado*/
-    private String command;
+    private final String command;
 
     /*conteudo inteiro da mensagem*/
-    private String contentRaw;
+    private final String contentRaw;
 
     /**
      * lista de parametros pasados pelo comando.
@@ -26,7 +27,7 @@ public class ReceivedInfo {
      * Output: [a, b, c, @<id_do_user>]
      *
      * */
-    private String[] arguments;
+    private final String[] arguments;
 
     /*lista de membros mencionados na mensagem.*/
     private List<Member> mentions;
@@ -55,6 +56,8 @@ public class ReceivedInfo {
     /*esta função analisa a String do conteudo da mensagem e cria o ReceivedInfo, apos isso ele enviara ao executor do comando.
     *O comando será verificado se bate com o enviado na mensagem antes de processar a query.*/
     public static void query(MessageReceivedEvent event, Consumer<ReceivedInfo> receivedInfoConsumer) {
+
+        if(event.getMember().getUser().isBot()) return;
 
         String contentRaw = event.getMessage().getContentRaw().trim();
 

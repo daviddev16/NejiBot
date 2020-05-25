@@ -31,7 +31,9 @@ public enum EmoteServerType {
 
     /*voting emotes*/
     UP_VOTE("upvote"),
-    DOWN_VOTE("downvote");
+    DOWN_VOTE("downvote"),
+
+    LINK("link");
 
 
     /*nome do emote na lista de emotes do server*/

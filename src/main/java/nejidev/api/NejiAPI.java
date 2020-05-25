@@ -75,6 +75,9 @@ public final class NejiAPI {
     /*canal de issues*/
     public static final long ISSUE_CHANNEL_ID = 709283806925815908L;
 
+    /*issues category*/
+    public static final long ISSUES_CATEGORY_ID = 714291287452549190L;
+
     /*acessar os banners do servidor*/
     public static Banner getServerBanner(BannerType bannerType){
 

@@ -3,20 +3,20 @@ package nejidev.commands;
 import nejidev.api.NejiAPI;
 import nejidev.api.commands.CommandBase;
 import nejidev.api.commands.ReceivedInfo;
-import nejidev.api.commands.miscs.Category;
 import nejidev.api.commands.miscs.CommandCategory;
 import nejidev.api.database.MemberElementType;
 import nejidev.api.database.NejiDatabase;
 import nejidev.api.emotes.EmoteServerType;
 import nejidev.tags.issues.OpenIssueTagEvent;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import java.awt.*;
 import java.time.Duration;
 
-@CommandCategory(category = Category.SERVER)
+@CommandCategory(category = nejidev.api.commands.miscs.Category.SERVER)
 public class CloseIssueCommand extends CommandBase {
 
     public static final MessageEmbed.Field USAGE = new MessageEmbed.Field("Use:", "!close <issue id>", false);
@@ -63,6 +63,15 @@ public class CloseIssueCommand extends CommandBase {
             issueMessage.addReaction(NejiAPI.getEmote(EmoteServerType.CLOSED)).queue();
 
             NejiDatabase.updateMember(ri.getSender(), MemberElementType.ISSUE);
+
+            Category issueCategory = NejiAPI.getServerGuild().getCategoryById(NejiAPI.ISSUES_CATEGORY_ID);
+
+            if(issueCategory != null) {
+                String issueId = issueMessage.getId();
+                issueCategory.getTextChannels().stream().filter(textChannel -> textChannel.getName().equalsIgnoreCase(issueId)).findFirst().ifPresent(textChannel -> {
+                    textChannel.delete().queue();
+                });
+            }
 
             return true;
         }

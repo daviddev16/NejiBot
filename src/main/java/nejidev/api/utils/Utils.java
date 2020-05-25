@@ -42,6 +42,15 @@ public class Utils {
        return new ByteArrayInputStream(imageInByte);
     }
 
+    public static byte[] toByteArray(BufferedImage image) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ImageIO.write(image, "png", baos );
+        baos.flush();
+        byte[] imageInByte = baos.toByteArray();
+        baos.close();
+        return imageInByte;
+    }
+
     /**
      * transformar imagem da url em uma Imagem em java.
      */

@@ -28,6 +28,7 @@ import java.io.InputStreamReader;
 import java.time.Duration;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.Executors;
 
 public final class NejiAPI {
 
@@ -55,7 +56,6 @@ public final class NejiAPI {
             return NejiAPI.checkPermission(member, EVERYONE);
         }
 
-
     }
 
     public interface IBotActivity {
@@ -66,7 +66,7 @@ public final class NejiAPI {
 
     }
 
-    public static final String VERSION = "1.0.9 PRE-ALPHa";
+    public static final String VERSION = "1.0.9 PRE-ALPHA";
 
     public static final Random random = new Random();
 
@@ -221,19 +221,19 @@ public final class NejiAPI {
      *
      */
     public static void setupActivityUpdater() {
-        Thread t = new Thread(() -> {
+        Executors.newSingleThreadExecutor().execute( () -> {
             try {
                 for(;;) {
                     IBotActivity activity = catchRandomActivity();
                     Objects.requireNonNull(activity);
                     updateActivity(activity);
-                    Thread.sleep(60 * 1000L);
+                    Thread.sleep(120 * 1000L);
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         });
-        t.start();
+
     }
 
     /*obter uma mensagem de status aleatoria*/

@@ -78,7 +78,6 @@ public class NejiBot extends Bot {
         NejiAPI.registerTag(Tag.createTag("vote", VoteTagEvent::new));
         NejiAPI.registerTag(Tag.createTag("devlog", DevlogTagEvent::new));
         NejiAPI.registerTag(Tag.createTag("option", OptionTagEvent::new));
-
     }
 
     public String getName(){

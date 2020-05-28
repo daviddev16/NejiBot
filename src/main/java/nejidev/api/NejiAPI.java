@@ -66,6 +66,8 @@ public final class NejiAPI {
 
     }
 
+    public static final String VERSION = "1.0.9 PRE-ALPHa";
+
     public static final Random random = new Random();
 
     /*canal de registro do membro*/

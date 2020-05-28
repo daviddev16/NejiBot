@@ -65,6 +65,7 @@ public class NejiBot extends Bot {
         NejiAPI.registerCommand(new CloseIssueCommand());
         NejiAPI.registerCommand(new RankCommand());
         NejiAPI.registerCommand(new ClearChatCommand());
+        NejiAPI.registerCommand(new VersionCommand());
     }
 
     public void registerTags(){
@@ -75,6 +76,7 @@ public class NejiBot extends Bot {
         NejiAPI.registerTag(Tag.createTag("sicko", SickoTagEvent::new));
         NejiAPI.registerTag(Tag.createTag("issue", OpenIssueTagEvent::new));
         NejiAPI.registerTag(Tag.createTag("vote", VoteTagEvent::new));
+        NejiAPI.registerTag(Tag.createTag("devlog", DevlogTagEvent::new));
         NejiAPI.registerTag(Tag.createTag("option", OptionTagEvent::new));
 
     }

@@ -5,9 +5,6 @@ import nejidev.api.commands.CommandBase;
 import nejidev.api.commands.ReceivedInfo;
 import nejidev.api.commands.miscs.Category;
 import nejidev.api.commands.miscs.CommandCategory;
-import net.dv8tion.jda.api.EmbedBuilder;
-
-import java.awt.*;
 
 @CommandCategory(category = Category.SERVER)
 public class VersionCommand extends CommandBase {
@@ -22,8 +19,7 @@ public class VersionCommand extends CommandBase {
 
     public boolean execute(ReceivedInfo receivedInfo) {
 
-        EmbedBuilder builder = new EmbedBuilder().setFooter("Minha versão atual é \"" +NejiAPI.VERSION+"\".", NejiAPI.getServerGuild().getIconUrl()).setColor(Color.magenta);
-        sendEmbed(receivedInfo, builder).queue();
+        sendSimple(receivedInfo, "Minha versão atual é: " + NejiAPI.VERSION).queue();
 
         return true;
     }

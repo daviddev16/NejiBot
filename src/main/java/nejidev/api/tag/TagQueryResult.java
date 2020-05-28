@@ -1,5 +1,7 @@
 package nejidev.api.tag;
 
+import net.dv8tion.jda.annotations.DeprecatedSince;
+
 import java.util.List;
 
 public class TagQueryResult {
@@ -25,7 +27,7 @@ public class TagQueryResult {
     }
 
     /*this variable will always be true on ITagEvent TagQueryResult.*/
-    @Deprecated
+    @DeprecatedSince("TagQueryResult")
     public boolean isValid() {
         return isValid;
     }

@@ -6,9 +6,4 @@
 
 [![Twitter](https://img.shields.io/static/v1?label=@daviid&message=Twitter&color=blue)](https://twitter.com/_daviid0)
 
-Este bot é dedicado somente para o meu servidor, porem deixarei o respositorio dele sempre atualizado aqui para quem quiser da uma olhada.
-Como o bot está em desenvolvimento ainda, não possui muitas funcionalidades.
-
-# Novidades
-
-Sistema de banco de dados foi recentemente inserido no bot.
+Bot descontinuado.
